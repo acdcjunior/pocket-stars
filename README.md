@@ -44,5 +44,7 @@ App should now be accessible on http://127.0.0.1:3000/.
 
 ```shell
 $ cd pocket-stars
-$ rails test
+$ rails test # all but system tests
+$ rails test:system # system tests
+$ rails test:all # ALL tests
 ```
