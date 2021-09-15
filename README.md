@@ -39,3 +39,10 @@ $ rails server
 ```
 
 App should now be accessible on http://127.0.0.1:3000/.
+
+## Running tests
+
+```shell
+$ cd pocket-stars
+$ rails test
+```
