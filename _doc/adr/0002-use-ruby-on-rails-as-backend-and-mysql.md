@@ -1,4 +1,4 @@
-# 2. Use Ruby on Rails as backend framework
+# 2. Use Ruby on Rails as backend framework and MySQL as database
 
 Date: 2021-07-14
 
@@ -22,9 +22,13 @@ it is an opportunity for learning and generating a baseline for comparison and c
 **Versions.** Not much thought has been put into the versions, since this is a demo project. We have chosen the latest
 for both Ruby (3.0.2) and Rails (6.1.4).
 
+### Database
+
+For the same reason (company adoption), we have chosen MySQL as database (instead of SQLite or PostgreSQL, other popular options in Rails).
+
 ## Decision
 
-We will use Ruby and Rails as language/framework.
+We will use Ruby and Rails as language/framework and MySQL as database.
 
 ## Consequences
 
