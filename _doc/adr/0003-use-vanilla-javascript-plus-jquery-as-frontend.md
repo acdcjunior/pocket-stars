@@ -1,4 +1,4 @@
-# 2. Use vanilla JavaScript plus jQuery as frontend technology
+# 3. Use vanilla JavaScript plus jQuery as frontend technology
 
 Date: 2021-07-15
 
