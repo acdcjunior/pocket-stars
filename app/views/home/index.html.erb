@@ -1,11 +1,58 @@
 <% provide(:pageTitle, "The Minimalist Entrepreneur | Ratings") %>
 
-<br><br>
-<div class="parent">
-  <div class="c-one">C-ONE</div>
-  <div class="c-two">C-TWO</div>
+<h1>The Minimalist Entrepreneur</h1>
+
+<div>
+  <span id="average-rating"></span>
+  <span id="average-rating-stars"></span>
+
+  <button id="add-review-btn">Add review</button>
 </div>
 
+<hr>
+
+<h2>Reviews</h2>
+
+<ul id="review-list"></ul>
+
+
 <script>
-    $(".c-two").append($("<span>", { text: "<YO>"}))
+    function fetchReviews() {
+        return $.ajax({url: "/reviews", dataType: "json"});
+    }
+
+    function times(times, cb) {
+        return Array.from({length: times}, cb)
+    }
+    function starComponent(filled) {
+      return $(`<span style='background-color: ${filled ? 'yellow' : 'gray'}; border: 1px solid black; padding: 5px; margin: 5px; display: inline-block'>`, { text: 'x' })
+    }
+    function starsComponent(rating) {
+        return $("<span>")
+                .append(times(rating, () => starComponent(true)))
+                .append(times(5-rating, () => starComponent(false)))
+    }
+    function reviewComponent(review) {
+        return $(`<li>`)
+            .append($("<span>").append(starsComponent(review.rating)))
+            .append($("<span>", { text: review.rating }))
+            .append($("<span>", { text: ", " }))
+            .append($("<span>", { text: review.review }))
+            .append($(`<a href='/reviews/${review.id}/edit' style="display: inline-block; margin-left: 10px">EDIT</a>`));
+    }
+    function replaceReviews(reviews) {
+        const $reviewList = $("#review-list");
+        $reviewList.empty();
+        reviews.forEach((r) => {
+            $reviewList.append(reviewComponent(r))
+        });
+    }
+
+    (async () => {
+        const reviews = await fetchReviews();
+        replaceReviews(reviews);
+        const averageRating = (reviews.map(r => r.rating).reduce((r1, r2) => r1 + r2) / reviews.length).toFixed(1);
+        $("#average-rating").text(averageRating.replace(/\.0$/, ""));
+        $("#average-rating-stars").empty().append(starsComponent(Math.ceil(+averageRating)));
+    })();
 </script>
