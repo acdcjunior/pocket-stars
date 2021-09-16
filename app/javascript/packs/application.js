@@ -7,9 +7,13 @@ import Rails from "@rails/ujs"
 import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
-import $ from "jquery"
 
-window.$ = $;
+import jQuery from "jquery"
+import "jquery-modal"
+import "jquery-toast-plugin"
+import "jquery-toast-plugin/dist/jquery.toast.min.css"
+
+window.$ = jQuery;
 
 Rails.start()
 Turbolinks.start()
