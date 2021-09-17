@@ -1,39 +1,41 @@
 <% provide(:pageTitle, "The Minimalist Entrepreneur | Ratings") %>
 
-<h1>The Minimalist Entrepreneur</h1>
+<div class="content">
+  <h1 id="main-header">The Minimalist Entrepreneur</h1>
 
-<div>
-  <span id="average-rating"></span>
-  <span id="average-rating-stars"></span>
+  <div id="average-rating-box">
+    <span id="average-rating"></span>
+    <span id="average-rating-stars"></span>
 
-  <button id="add-review-btn">Add review</button>
-</div>
+    <button id="add-review-btn">Add review</button>
+  </div>
 
-<hr>
+  <hr class="divider">
 
-<h2>Reviews</h2>
+  <h2 id="reviews-header">Reviews</h2>
 
-<ul id="review-list">
-  <li><h2>LOADING...</h2></li>
-</ul>
+  <ul id="review-list">
+    <li><h2>LOADING...</h2></li>
+  </ul>
 
-<div id="new-rating-form" class="modal">
-  <h1>What's your rating?</h1>
+  <div id="new-rating-form" class="modal">
+    <h1>What's your rating?</h1>
 
-  <h3>Rating</h3>
-  <span id="new-rating-stars">
-    <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as one star"></span>
-    <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as two stars"></span>
-    <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as three stars"></span>
-    <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as four stars"></span>
-    <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as five stars"></span>
-  </span>
+    <h3>Rating</h3>
+    <div id="new-rating-stars">
+      <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as one star"></span>
+      <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as two stars"></span>
+      <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as three stars"></span>
+      <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as four stars"></span>
+      <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as five stars"></span>
+    </div>
 
-  <h3>Review</h3>
-  <label for="new-rating-textarea">Review</label>
-  <textarea id="new-rating-textarea" cols="30" rows="10" placeholder="Start typing..."></textarea>
+    <h3>Review</h3>
+    <label for="new-rating-textarea">Review</label>
+    <textarea id="new-rating-textarea" cols="30" rows="10" placeholder="Start typing..."></textarea>
 
-  <br>
-  <br>
-  <button id="new-rating-submit-btn">Submit review</button>
+    <br>
+    <br>
+    <button id="new-rating-submit-btn">Submit review</button>
+  </div>
 </div>
