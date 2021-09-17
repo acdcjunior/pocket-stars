@@ -9,5 +9,11 @@ class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
 
-  # Add more helper methods to be used by all tests here...
+  # https://gist.github.com/femoco/87164
+  def random_string(length = 5)
+    source = ('a'..'z').to_a + ('A'..'Z').to_a + (0..9).to_a + ['_', '-', '.']
+    key = ''
+    length.times { key += source[rand(source.size)].to_s }
+    key
+  end
 end
