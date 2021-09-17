@@ -139,7 +139,7 @@ function NewRatingModalComponent(onSaveNewRating) {
                 selectedRatingModel.resetSelectedRating();
                 reviewTextModel.resetTypedReview();
 
-                $("#new-rating-form").removeClass("modal");
+                $.modal.close();
 
                 onSaveNewRating();
             })
@@ -153,7 +153,7 @@ $(async () => {
     renderReviews();
 
     $("#add-review-btn").click(() => {
-        $("#new-rating-form").addClass("modal");
+        $("#new-rating-form").modal()
     });
 
     NewRatingModalComponent(() => {
