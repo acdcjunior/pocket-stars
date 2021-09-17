@@ -13,59 +13,26 @@
 
 <h2>Reviews</h2>
 
-<ul id="review-list"></ul>
+<ul id="review-list">
+  <li><h2>LOADING...</h2></li>
+</ul>
 
+<div id="new-rating-form">
+  <h1>What's your rating?</h1>
 
-<script>
-    function displayErrorToast(message, errorResponse) {
-        console.error(message, errorResponse);
-        const trimmedErrorMessage = ((msg, n) => msg.substr(0, n) + (msg.length > n ? '...' : ''))(errorResponse.responseText || '', 150);
-        $.toast({
-            icon: 'error',
-            text: message + `<br><br>Error: ${trimmedErrorMessage}`,
-            hideAfter: false
-        });
-    }
-    function fetchReviews() {
-        return $.ajax({url: "/reviews", dataType: "json"})
-            .catch(errorResponse => {
-                displayErrorToast('Oops! Found an error while attempting to fetch the reviews! Please reload the page in a few moments to try again!', errorResponse);
-                return [];
-            });
-    }
+  <h3>Rating</h3>
+  <span id="new-rating-stars">
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+  </span>
 
-    function times(times, cb) {
-        return Array.from({length: times}, cb)
-    }
-    function starComponent(filled) {
-      return $(`<span style='background-color: ${filled ? 'yellow' : 'gray'}; border: 1px solid black; padding: 5px; margin: 5px; display: inline-block'>`, { text: 'x' })
-    }
-    function starsComponent(rating) {
-        return $("<span>")
-                .append(times(rating, () => starComponent(true)))
-                .append(times(5-rating, () => starComponent(false)))
-    }
-    function reviewComponent(review) {
-        return $(`<li>`)
-            .append($("<span>").append(starsComponent(review.rating)))
-            .append($("<span>", { text: review.rating }))
-            .append($("<span>", { text: ", " }))
-            .append($("<span>", { text: review.review }))
-            .append($(`<a href='/reviews/${review.id}/edit' style="display: inline-block; margin-left: 10px">EDIT</a>`));
-    }
-    function replaceReviews(reviews) {
-        const $reviewList = $("#review-list");
-        $reviewList.empty();
-        reviews.forEach((r) => {
-            $reviewList.append(reviewComponent(r))
-        });
-    }
+  <h3>Review</h3>
+  <textarea id="new-rating-textarea" cols="30" rows="10" placeholder="Start typing..."></textarea>
 
-    (async () => {
-        const reviews = await fetchReviews();
-        replaceReviews(reviews);
-        const averageRating = (reviews.map(r => r.rating).reduce((r1, r2) => r1 + r2) / reviews.length).toFixed(1);
-        $("#average-rating").text(averageRating.replace(/\.0$/, ""));
-        $("#average-rating-stars").empty().append(starsComponent(Math.ceil(+averageRating)));
-    })();
-</script>
+  <br>
+  <br>
+  <button id="new-rating-submit-btn">Submit review</button>
+</div>

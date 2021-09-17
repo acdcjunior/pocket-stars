@@ -1,0 +1,29 @@
+#new-rating-stars {
+    border: 1px solid red;
+}
+
+.star {
+    border: 1px solid black;
+    padding: 5px;
+    margin: 5px;
+    display: inline-block;
+    background-color: lightgray;
+
+    &.star-on {
+        background-color: yellow;
+    }
+
+}
+
+/* padding for error toast */
+div.jq-has-icon {
+     padding: 20px 20px 20px 50px;
+}
+
+#new-rating-form {
+    display: none;
+
+    &.modal {
+        display: block;
+    }
+}
