@@ -4,7 +4,11 @@ require 'application_system_test_case'
 
 class HomeTest < ApplicationSystemTestCase
   add_review_button_label = 'Add review'
+  star_selector = '.star'
+  highlighted_star_selector = '.star.star-on'
+
   whats_your_rating_header_text = "What's your rating?"
+  highlighted_stars_on_new_review_form_selector = '#new-rating-stars .star.star-on'
   one_star_label = 'Rate as one star'
   new_review_textarea_label = 'Review'
   submit_review_button_label = 'Submit review'
@@ -30,12 +34,33 @@ class HomeTest < ApplicationSystemTestCase
   end
 
   test "'add review' opens modal and creates new review" do
+    # given
     visit root_url
+    # when
     click_on add_review_button_label
     new_review_text = "Review text! #{random_string}"
     fill_in new_review_textarea_label, with: new_review_text
     click_on one_star_label
     click_on submit_review_button_label
+    # then
     assert_text new_review_text
+    li_containing_new_review_text = find('span', text: new_review_text).find(:xpath, '..')
+    expect(li_containing_new_review_text).to have_css(star_selector, count: 5)
+    expect(li_containing_new_review_text).to have_css(highlighted_star_selector, count: 1)
+  end
+
+  test "'add review' form is cleared after creation" do
+    # given
+    visit root_url
+    click_on add_review_button_label
+    fill_in new_review_textarea_label, with: random_string
+    click_on one_star_label
+    # when
+    click_on submit_review_button_label
+    # then
+    click_on add_review_button_label
+
+    expect(page).to have_css(highlighted_stars_on_new_review_form_selector, count: 0)
+    expect(page).to have_field(new_review_textarea_label, with: '')
   end
 end
