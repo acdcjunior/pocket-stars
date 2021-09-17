@@ -48,6 +48,9 @@ group :test do
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
 
+  # expect() methods
+  gem 'rspec'
+
   # rexml added because "rails test" failed with:
   # ...bootsnap-1.8.1/lib/bootsnap/load_path_cache/core_ext/kernel_require.rb:23:in `require': cannot load such file -- rexml/document (LoadError)
   gem 'rexml', '~> 3.2'
