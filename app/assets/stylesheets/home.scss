@@ -153,3 +153,28 @@ div.jq-has-icon {
 #new-rating-stars {
     font-size: 0; /* remove space between spans */
 }
+
+
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.25);
+}
+
+/* Modal Content */
+.modal-content {
+    background: #FFFFFF;
+    border-radius: 20px;
+    margin: auto;
+    padding: 20px;
+    width: 80%;
+}

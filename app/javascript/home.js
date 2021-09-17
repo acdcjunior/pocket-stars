@@ -63,7 +63,7 @@ async function renderReviews() {
 }
 
 
-function NewRatingModalComponent(onSaveNewRating) {
+function NewRatingModalComponent($newReviewModal, $newReviewStarsRoot, $newReviewTextArea, $newReviewSubmitButton, onNewReviewSaved) {
 
     function postNewReview(review) {
         return $.ajax({
@@ -74,8 +74,8 @@ function NewRatingModalComponent(onSaveNewRating) {
         });
     }
 
-    function SelectRatingComponent($starsRootJQueryObject) {
-        const $stars = $starsRootJQueryObject.children();
+    function SelectRatingComponent($newReviewStarsRoot) {
+        const $stars = $newReviewStarsRoot.children();
         let selectedRating = 0;
 
         const selectNewRating = (rating) => {
@@ -97,7 +97,7 @@ function NewRatingModalComponent(onSaveNewRating) {
             highlightStarsUpTo(selectedRating);
         }
         const initView = () => {
-            $starsRootJQueryObject.children('span').append([starOn.clone(), starOff.clone()]);
+            $newReviewStarsRoot.children('span').append([starOn.clone(), starOff.clone()]);
         }
         const bindEventsOnView = () => {
             $stars.each((i, e) => {
@@ -131,41 +131,97 @@ function NewRatingModalComponent(onSaveNewRating) {
         };
     }
 
-    const selectedRatingModel = SelectRatingComponent($("#new-rating-stars"));
-    const reviewTextModel = ReviewTextAreaComponent($("#new-rating-textarea"));
-
-    $("#new-rating-submit-btn").click(() => {
-        const newReview = {
-            rating: selectedRatingModel.selectedRating,
-            review: reviewTextModel.typedReview
-        };
-        console.log('new review:', newReview);
-
-        postNewReview(newReview)
-            .done(() => {
-                displaySuccessToast('Your new review has been added! Thanks!');
-
-                selectedRatingModel.resetSelectedRating();
-                reviewTextModel.resetTypedReview();
-
-                $.modal.close();
-
-                onSaveNewRating();
-            })
-            .fail((errorResponse) => {
-                displayErrorToast('Oops! Found an error while attempting to save your new reviews! Please wait a few moments and try again!', errorResponse);
+    function Modal() {
+        const openModal = () => {
+            $newReviewModal.show();
+            $newReviewTextArea.focus()
+        }
+        const hideModal = () => {
+            $newReviewModal.hide();
+        }
+        const handleClickOutsideModal = () => {
+            $(window).click((event) => {
+                if (event.target === $newReviewModal[0]) {
+                    hideModal();
+                }
             });
-    });
+        };
+        const handleEscapeKeyPress = () => {
+            $(document).keyup(function (e) {
+                if (e.key === 'Escape') {
+                    hideModal();
+                }
+            });
+        };
+
+        const bindEvents = () => {
+            handleClickOutsideModal();
+            handleEscapeKeyPress();
+        }
+        bindEvents();
+
+        return {
+            openModal,
+            hideModal
+        }
+    }
+
+    function bindEvents(selectedRatingModel, reviewTextModel, modal) {
+
+        $newReviewSubmitButton.click(() => {
+            const newReview = {
+                rating: selectedRatingModel.selectedRating,
+                review: reviewTextModel.typedReview
+            };
+            console.log('new review:', newReview);
+
+            postNewReview(newReview)
+                .done(() => {
+                    displaySuccessToast('Your new review has been added! Thanks!');
+
+                    selectedRatingModel.resetSelectedRating();
+                    reviewTextModel.resetTypedReview();
+
+                    modal.hideModal()
+
+                    onNewReviewSaved();
+                })
+                .fail((errorResponse) => {
+                    displayErrorToast('Oops! Found an error while attempting to save your new reviews! Please wait a few moments and try again!', errorResponse);
+                });
+        });
+    }
+
+    function init() {
+        const selectedRatingModel = SelectRatingComponent($newReviewStarsRoot);
+        const reviewTextModel = ReviewTextAreaComponent($("#new-rating-textarea"));
+        const modal = Modal();
+
+        bindEvents(selectedRatingModel, reviewTextModel, modal);
+
+        return {
+            openModal: modal.openModal
+        }
+    }
+
+    const { openModal } = init();
+
+    return {
+        open: openModal
+    }
 }
 
 $(async () => {
     renderReviews();
 
-    $("#add-review-btn").click(() => {
-        $("#new-rating-form").modal()
-    });
+    const { open } = NewRatingModalComponent(
+        $("#new-rating-form"),
+        $("#new-rating-stars"),
+        $("#new-rating-textarea"),
+        $("#new-rating-submit-btn"),
+        () => { renderReviews(); })
 
-    NewRatingModalComponent(() => {
-        renderReviews();
-    })
+    $("#add-review-btn").click(() => {
+        open();
+    });
 })
