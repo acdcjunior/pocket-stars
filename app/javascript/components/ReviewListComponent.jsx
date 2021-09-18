@@ -1,3 +1,4 @@
+import React from 'react';
 import $ from "jquery";
 import {Toast} from "./Toast";
 import {$starOff, $starOffWithDefs, $starOn, $starOnWithDefs} from "./StarSvg";
@@ -8,7 +9,7 @@ function times(times, cb) {
 }
 
 
-export function ReviewListComponent($reviewList, $averageRatingNumber, $averageRatingStars) {
+export function ReviewListJQueryComponent($reviewList, $averageRatingNumber, $averageRatingStars) {
     const fetchReviews = () => {
         return $.ajax({url: '/reviews', dataType: 'json'})
             .catch(errorResponse => {
@@ -68,4 +69,34 @@ export function ReviewListComponent($reviewList, $averageRatingNumber, $averageR
     return {
         renderReviewList
     }
+}
+
+export const ReviewListComponent = () => {
+
+    return (
+        <div>
+            <div id="average-rating-box">
+                <span id="average-rating"/>
+                <div id="average-rating-stars">
+                    <span className="star defs"/>
+                    <span className="star"/>
+                    <span className="star"/>
+                    <span className="star"/>
+                    <span className="star"/>
+                </div>
+
+                <button id="add-review-btn">Add review</button>
+            </div>
+
+            <hr className="divider"/>
+
+            <h2 id="reviews-header">Reviews</h2>
+
+            <ul id="review-list">
+                <li>
+                    <div className="notice">Loading reviews...</div>
+                </li>
+            </ul>
+        </div>
+    );
 }

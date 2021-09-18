@@ -1,10 +1,11 @@
+import React from 'react';
 import $ from "jquery";
 import {Toast} from "./Toast";
 import {$starOff, $starOn} from "./StarSvg";
 
 const SHAKE_EFFECT_CLASSNAME = 'shake';
 
-export function NewReviewModalComponent(
+export function NewReviewModalJQueryComponent(
     $newReviewModal, $newReviewStarsRoot, $newReviewReviewTextArea, $newReviewSubmitButton, $newReviewSubmitBlock, onNewReviewSaved
 ) {
 
@@ -223,4 +224,33 @@ export function NewReviewModalComponent(
     return {
         openModal
     }
+}
+
+
+export const NewReviewModalComponent = () => {
+
+    return (
+        <div id="new-review-modal" className="modal">
+            <div className="modal-content">
+                <h1 id="new-review-header">What’s your rating?</h1>
+
+                <h3 id="new-review-rating-header">Rating</h3>
+                <div id="new-rating-stars">
+                    <span className="star" tabIndex="0" role="button" aria-pressed="false" aria-label="Rate as one star"/>
+                    <span className="star" tabIndex="0" role="button" aria-pressed="false" aria-label="Rate as two stars"/>
+                    <span className="star" tabIndex="0" role="button" aria-pressed="false" aria-label="Rate as three stars"/>
+                    <span className="star" tabIndex="0" role="button" aria-pressed="false" aria-label="Rate as four stars"/>
+                    <span className="star" tabIndex="0" role="button" aria-pressed="false" aria-label="Rate as five stars"/>
+                </div>
+
+                <label htmlFor="new-review-review-textarea" id="new-review-review-label">Review</label>
+                <div id="new-review-review-textarea-expansion-zone">
+                    <div id="new-review-review-textarea" role="textbox" contentEditable data-placeholder="Start typing..."/>
+                </div>
+
+                <button id="new-review-submit-btn" data-submitting-text="Submitting..." data-submitted-text="Submit review">Submit review</button>
+            </div>
+            <div id="new-review-submit-block" style={{display: 'none'}}/>
+        </div>
+    );
 }

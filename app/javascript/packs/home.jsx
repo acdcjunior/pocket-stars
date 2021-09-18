@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {Home, initHome} from "../components/Home";
+import {HomeComponent, initHome} from "../components/HomeComponent";
 
 document.addEventListener('DOMContentLoaded', () => {
     ReactDOM.render(
-        <Home/>,
+        <HomeComponent/>,
         document.getElementById('home-root')
     );
     initHome();
