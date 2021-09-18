@@ -4,7 +4,7 @@ $base-text-color-black: #000000;
 $base-text-color-gray: #797874;
 $roboto-font: 'Roboto';
 $roboto-font-family: $roboto-font, sans-serif;
-
+body{ background-image: url('body.png'); background-position: -43px 0; }
 .content {
     width: 580px;
     margin: 118px auto;
@@ -96,13 +96,13 @@ button {
     font-family: $roboto-font-family;
     color: $base-text-color-gray;
     font-size: 20px;
-    margin-left: -7px;
-    margin-top: 29px;
+    margin-left: -8px;
+    margin-top: 26px;
 
     & li > div {
         display: flex;
         align-items: center;
-        margin: 15px 0 20px 0;
+        margin: 0 0 14px 0;
     }
 
     & .review-rating {
