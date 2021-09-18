@@ -156,6 +156,11 @@ function NewReviewModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
         const openModal = () => {
             $reviewModal.show();
             $reviewReviewTextArea.focus();
+            if ($reviewReviewTextArea.text() !== '') {
+                // if text exists, then the modal has been shown and was closed without a submit...
+                // ...so, select previously typed text to make it easier for the user to re-type
+                window.getSelection().selectAllChildren($reviewReviewTextArea[0]);
+            }
         }
         const hideModal = () => {
             $reviewModal.hide();
