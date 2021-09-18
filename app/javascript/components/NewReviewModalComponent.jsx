@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from "jquery";
 import {Toast} from "./Toast";
-import {$starOff, $starOn} from "./StarSvg";
+import {$starOff, $starOn} from "./StarComponent";
 
 const SHAKE_EFFECT_CLASSNAME = 'shake';
 

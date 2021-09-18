@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from "jquery";
 import {Toast} from "./Toast";
-import {$starOff, $starOffWithDefs, $starOn, $starOnWithDefs} from "./StarSvg";
+import {$starOff, $starOffWithDefs, $starOn, $starOnWithDefs} from "./StarComponent";
 
 
 function times(times, cb) {
