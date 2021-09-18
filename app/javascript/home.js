@@ -137,30 +137,36 @@ function NewReviewModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
         const resetTypedReview = () => {
             $reviewTextArea.text('')
         }
+        const getTypedReviewText = () => $reviewTextArea.text().trim();
+
         $reviewTextArea.blur(() => {
             // workaround contenteditable bug that does not show placeholder after some multi-line text has been entered and deleted
-            if ($reviewTextArea.text().trim() === '') {
+            if (getTypedReviewText() === '') {
                 resetTypedReview();
             }
         });
+
         return {
             get typedReview() {
-                return $reviewTextArea.text();
+                return getTypedReviewText();
             },
             resetTypedReview,
-            flashInvalidAndBringFocus
+            flashInvalidAndBringFocus,
+            focusTextArea: () => {
+                $reviewTextArea.focus();
+                if (getTypedReviewText() !== '') {
+                    // if text exists, then the modal has been shown and was closed without a submit...
+                    // ...so, select previously typed text to make it easier for the user to re-type
+                    window.getSelection().selectAllChildren($reviewTextArea[0]);
+                }
+            }
         };
     }
 
-    function Modal($reviewModal, $reviewReviewTextArea) {
+    function Modal($reviewModal, reviewTextAreaComponent) {
         const openModal = () => {
             $reviewModal.show();
-            $reviewReviewTextArea.focus();
-            if ($reviewReviewTextArea.text() !== '') {
-                // if text exists, then the modal has been shown and was closed without a submit...
-                // ...so, select previously typed text to make it easier for the user to re-type
-                window.getSelection().selectAllChildren($reviewReviewTextArea[0]);
-            }
+            reviewTextAreaComponent.focusTextArea();
         }
         const hideModal = () => {
             $reviewModal.hide();
@@ -252,10 +258,10 @@ function NewReviewModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
 
     function init() {
         const selectedRatingModel = SelectRatingComponent($newReviewStarsRoot);
-        const reviewTextModel = ReviewTextAreaComponent($newReviewReviewTextArea);
-        const modal = Modal($newReviewModal, $newReviewReviewTextArea);
+        const reviewTextAreaComponent = ReviewTextAreaComponent($newReviewReviewTextArea);
+        const modal = Modal($newReviewModal, reviewTextAreaComponent);
 
-        bindSubmitClick(selectedRatingModel, reviewTextModel, modal);
+        bindSubmitClick(selectedRatingModel, reviewTextAreaComponent, modal);
 
         return {
             openModal: modal.openModal
