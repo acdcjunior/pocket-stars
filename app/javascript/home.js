@@ -38,7 +38,7 @@ function starsComponent(rating) {
         .append(times(5-rating, () => starComponent(false)))
 }
 function reviewComponent(review) {
-    return $(`<li>`).append(
+    return $(`<li>`).addClass("review").append(
         $("<div>")
             .append($("<span>").append(starsComponent(review.rating)))
             .append($("<span>", { text: review.rating }).addClass('review-rating'))
@@ -96,6 +96,10 @@ function NewRatingModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
         const resetHighlightedStars = () => {
             highlightStarsUpTo(selectedRating);
         }
+        const flashInvalid = () => {
+            $newReviewStarsRoot.addClass("shake");
+            setTimeout(() => $newReviewStarsRoot.removeClass("shake"), 300);
+        }
         const initView = () => {
             $newReviewStarsRoot.children('span').append([starOn.clone(), starOff.clone()]);
         }
@@ -116,11 +120,17 @@ function NewRatingModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
             get selectedRating() {
                 return selectedRating;
             },
-            resetSelectedRating
+            resetSelectedRating,
+            flashInvalid
         };
     }
 
     function ReviewTextAreaComponent($reviewTextAreaJQueryObject) {
+        const flashInvalidAndBringFocus = () => {
+            $reviewTextAreaJQueryObject.parent().addClass("shake");
+            setTimeout(() => $reviewTextAreaJQueryObject.parent().removeClass("shake"), 300);
+            $newReviewReviewTextArea.focus();
+        }
         const resetTypedReview = () => {
             $reviewTextAreaJQueryObject.text('')
         }
@@ -134,14 +144,15 @@ function NewRatingModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
             get typedReview() {
                 return $reviewTextAreaJQueryObject.text();
             },
-            resetTypedReview
+            resetTypedReview,
+            flashInvalidAndBringFocus
         };
     }
 
     function Modal() {
         const openModal = () => {
             $newReviewModal.show();
-            $newReviewReviewTextArea.focus()
+            $newReviewReviewTextArea.focus();
         }
         const hideModal = () => {
             $newReviewModal.hide();
@@ -173,14 +184,35 @@ function NewRatingModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
         }
     }
 
+    const validRatings = [1, 2, 3, 4, 5];
+    function validateNewReview({ rating, review }) {
+        const isRatingInvalid = !validRatings.includes(rating);
+        const isReviewInvalid = !review.trim().length > 0;
+        return {
+            isRatingInvalid,
+            isReviewInvalid,
+            anyInvalid: isRatingInvalid || isReviewInvalid
+        }
+    }
+
     function bindEvents(selectedRatingModel, reviewTextModel, modal) {
 
         $newReviewSubmitButton.click(() => {
             const newReview = {
                 rating: selectedRatingModel.selectedRating,
-                review: reviewTextModel.typedReview
+                review: reviewTextModel.typedReview.trim()
             };
-            console.log('new review:', newReview);
+
+            const validationResult = validateNewReview(newReview);
+            if (validationResult.anyInvalid) {
+                if (validationResult.isRatingInvalid) {
+                    selectedRatingModel.flashInvalid();
+                }
+                if (validationResult.isReviewInvalid) {
+                    reviewTextModel.flashInvalidAndBringFocus();
+                }
+                return;
+            }
 
             postNewReview(newReview)
                 .done(() => {
@@ -226,7 +258,12 @@ $(async () => {
         $("#new-rating-stars"),
         $("#new-review-review-textarea"),
         $("#new-review-submit-btn"),
-        () => { renderReviews(); })
+        () => {
+            renderReviews();
+            setTimeout(() => {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); // scroll to bottom of page
+            }, 300);
+        })
 
     $("#add-review-btn").click(() => {
         openModal();

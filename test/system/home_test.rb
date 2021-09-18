@@ -7,6 +7,8 @@ class HomeTest < ApplicationSystemTestCase
   star_selector = '.star'
   highlighted_star_selector = '.star.star-on'
 
+  review_on_review_list_selector = 'li.review'
+
   whats_your_rating_header_text = 'What’s your rating?'
   highlighted_stars_on_new_review_form_selector = '#new-rating-stars .star.star-on'
   one_star_label = 'Rate as one star'
@@ -62,5 +64,28 @@ class HomeTest < ApplicationSystemTestCase
 
     expect(page).to have_css(highlighted_stars_on_new_review_form_selector, count: 0)
     expect(page).to have_css(new_review_textarea_selector, text: '')
+  end
+
+  test 'invalid review does not insert a new review' do
+    # given
+    visit root_url
+    number_of_reviews_when_page_was_loaded = page.all(review_on_review_list_selector).count
+
+    click_on add_review_button_label
+    click_on submit_review_button_label
+
+    expect(page).to have_css(review_on_review_list_selector, count: number_of_reviews_when_page_was_loaded)
+    assert_text whats_your_rating_header_text
+  end
+
+  test 'escape closes modal' do
+    # given
+    visit root_url
+
+    click_on add_review_button_label
+    assert_text whats_your_rating_header_text
+
+    find(new_review_textarea_selector).send_keys(:escape)
+    assert_no_text whats_your_rating_header_text
   end
 end
