@@ -73,6 +73,7 @@ function NewRatingModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
             data: {review}
         });
     }
+    window.postNewReview = postNewReview;
 
     function SelectRatingComponent($newReviewStarsRoot) {
         const $stars = $newReviewStarsRoot.children();

@@ -26,6 +26,18 @@ class ReviewsControllerTest < ActionDispatch::IntegrationTest
     assert_equal true, @response.parsed_body # jquery requires that HTTP status 201 has content, otherwise $.ajax will invoke the error callback
   end
 
+  test 'should validate rating' do
+    post reviews_url, as: :json, params: { review: { rating: 0, review: 'hey' } }
+
+    assert_response 422
+  end
+
+  test 'should validate review (text prop)' do
+    post reviews_url, as: :json, params: { review: { rating: 1, review: '' } }
+
+    assert_response 422
+  end
+
   # TODO: actions below are kept temporarily for development purposes, they wont be in the MVP
   test 'should get new' do
     get new_review_url
