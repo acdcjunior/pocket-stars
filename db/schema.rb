@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2021_09_15_140255) do
 
-  create_table "reviews", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "reviews", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "rating"
     t.text "review"
     t.datetime "created_at", precision: 6, null: false
