@@ -4,6 +4,7 @@ $base-text-color-black: #000000;
 $base-text-color-gray: #797874;
 $roboto-font: 'Roboto';
 $roboto-font-family: $roboto-font, sans-serif;
+$helvetica-neue-font-family: Helvetica Neue, Helvetica, serif;
 
 .content {
     width: 580px;
@@ -54,7 +55,7 @@ button {
     cursor: pointer;
 
     /* Label 1 (Bold) */
-    font-family: Helvetica Neue, Helvetica;
+    font-family: $helvetica-neue-font-family;
     font-style: normal;
     font-weight: bold;
     font-size: 17px;
@@ -203,7 +204,7 @@ div.jq-has-icon {
     color: $base-text-color-black;
 }
 #new-review-rating-header {
-    font-family: Roboto;
+    font-family: $roboto-font-family;
     font-style: normal;
     font-weight: normal;
     font-size: 24px;
@@ -265,6 +266,17 @@ div.jq-has-icon {
 #new-review-submit-btn {
     margin-top: -1px;
     padding: 14px 50px 11px 50px;
+    width: 218px;
+}
+#new-review-submit-block {
+  z-index: 2;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0);
 }
 
 

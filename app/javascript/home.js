@@ -93,7 +93,9 @@ function ReviewListComponent($reviewList, $averageRatingNumber, $averageRatingSt
 }
 
 
-function NewReviewModalComponent($newReviewModal, $newReviewStarsRoot, $newReviewReviewTextArea, $newReviewSubmitButton, onNewReviewSaved) {
+function NewReviewModalComponent(
+    $newReviewModal, $newReviewStarsRoot, $newReviewReviewTextArea, $newReviewSubmitButton, $newReviewSubmitBlock, onNewReviewSaved
+) {
 
     function SelectRatingComponent($reviewStarsRoot) {
         const $stars = $reviewStarsRoot.children();
@@ -234,6 +236,15 @@ function NewReviewModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
         }
     };
 
+    const markFormAsSubmittingNow = () => {
+        $newReviewSubmitBlock.show();
+        $newReviewSubmitButton.text($newReviewSubmitButton.data('submitting-text'));
+    };
+    const markFormAsSubmissionCompleted = () => {
+        $newReviewSubmitBlock.hide();
+        $newReviewSubmitButton.text($newReviewSubmitButton.data('submitted-text'));
+    };
+
     const bindSubmitClick = (selectedRatingModel, reviewTextModel, modal) => {
         const submitReview = () => {
             const newReview = {
@@ -252,9 +263,10 @@ function NewReviewModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
                 return;
             }
 
+            markFormAsSubmittingNow();
             postNewReview(newReview)
                 .done(() => {
-                    Toast.displaySuccess('Your new review has been added! Thanks!');
+                    Toast.displaySuccess('Your new review has been submitted! Thanks!');
 
                     selectedRatingModel.resetSelectedRating();
                     reviewTextModel.resetTypedReview();
@@ -268,6 +280,9 @@ function NewReviewModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
                         'Oops! Found an error while attempting to save your new reviews! Please wait a few moments and try again!',
                         errorResponse
                     );
+                })
+                .always(() => {
+                    markFormAsSubmissionCompleted();
                 });
         };
 
@@ -301,6 +316,7 @@ $(async () => {
         $('#new-rating-stars'),
         $('#new-review-review-textarea'),
         $('#new-review-submit-btn'),
+        $('#new-review-submit-block'),
         () => {
             renderReviewList();
             setTimeout(() => {
