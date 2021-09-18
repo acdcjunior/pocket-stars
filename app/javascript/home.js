@@ -42,8 +42,8 @@ function reviewComponent(review) {
         $("<div>")
             .append($("<span>").append(starsComponent(review.rating)))
             .append($("<span>", { text: review.rating }).addClass('review-rating'))
-            .append($("<span>", { text: `, ${review.review}` }))
-            //.append($(`<a href='/reviews/${review.id}/edit' style="display: inline-block; margin-left: 10px">EDIT</a>`))
+            .append($("<span>", { text: `, ${review.review}` }).addClass('review-text').attr('title', review.review))
+            // .append($(`<a href='/reviews/${review.id}/edit' style="display: inline-block; margin-left: 10px">EDIT</a>`))
     );
 }
 function replaceReviews(reviews) {
@@ -63,7 +63,7 @@ async function renderReviews() {
 }
 
 
-function NewRatingModalComponent($newReviewModal, $newReviewStarsRoot, $newReviewTextArea, $newReviewSubmitButton, onNewReviewSaved) {
+function NewRatingModalComponent($newReviewModal, $newReviewStarsRoot, $newReviewReviewTextArea, $newReviewSubmitButton, onNewReviewSaved) {
 
     function postNewReview(review) {
         return $.ajax({
@@ -121,20 +121,27 @@ function NewRatingModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
     }
 
     function ReviewTextAreaComponent($reviewTextAreaJQueryObject) {
+        const resetTypedReview = () => {
+            $reviewTextAreaJQueryObject.text('')
+        }
+        $reviewTextAreaJQueryObject.blur(() => {
+            // workaround contenteditable bug that does not show placeholder after some multi-line text has been entered and deleted
+            if ($reviewTextAreaJQueryObject.text().trim() === '') {
+                resetTypedReview();
+            }
+        })
         return {
             get typedReview() {
-                return $reviewTextAreaJQueryObject.val();
+                return $reviewTextAreaJQueryObject.text();
             },
-            resetTypedReview() {
-                $reviewTextAreaJQueryObject.val('')
-            }
+            resetTypedReview
         };
     }
 
     function Modal() {
         const openModal = () => {
             $newReviewModal.show();
-            $newReviewTextArea.focus()
+            $newReviewReviewTextArea.focus()
         }
         const hideModal = () => {
             $newReviewModal.hide();
@@ -194,7 +201,7 @@ function NewRatingModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
 
     function init() {
         const selectedRatingModel = SelectRatingComponent($newReviewStarsRoot);
-        const reviewTextModel = ReviewTextAreaComponent($("#new-rating-textarea"));
+        const reviewTextModel = ReviewTextAreaComponent($newReviewReviewTextArea);
         const modal = Modal();
 
         bindEvents(selectedRatingModel, reviewTextModel, modal);
@@ -207,21 +214,21 @@ function NewRatingModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
     const { openModal } = init();
 
     return {
-        open: openModal
+        openModal
     }
 }
 
 $(async () => {
     renderReviews();
 
-    const { open } = NewRatingModalComponent(
-        $("#new-rating-form"),
+    const { openModal } = NewRatingModalComponent(
+        $("#new-review-modal"),
         $("#new-rating-stars"),
-        $("#new-rating-textarea"),
-        $("#new-rating-submit-btn"),
+        $("#new-review-review-textarea"),
+        $("#new-review-submit-btn"),
         () => { renderReviews(); })
 
     $("#add-review-btn").click(() => {
-        open();
+        openModal();
     });
 })

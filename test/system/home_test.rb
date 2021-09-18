@@ -7,10 +7,10 @@ class HomeTest < ApplicationSystemTestCase
   star_selector = '.star'
   highlighted_star_selector = '.star.star-on'
 
-  whats_your_rating_header_text = "What's your rating?"
+  whats_your_rating_header_text = 'What’s your rating?'
   highlighted_stars_on_new_review_form_selector = '#new-rating-stars .star.star-on'
   one_star_label = 'Rate as one star'
-  new_review_textarea_label = 'Review'
+  new_review_textarea_selector = '#new-review-review-textarea'
   submit_review_button_label = 'Submit review'
 
   test 'visiting home' do
@@ -39,7 +39,7 @@ class HomeTest < ApplicationSystemTestCase
     # when
     click_on add_review_button_label
     new_review_text = "Review text! #{random_string}"
-    fill_in new_review_textarea_label, with: new_review_text
+    find(new_review_textarea_selector).send_keys new_review_text
     click_on one_star_label
     click_on submit_review_button_label
     # then
@@ -53,7 +53,7 @@ class HomeTest < ApplicationSystemTestCase
     # given
     visit root_url
     click_on add_review_button_label
-    fill_in new_review_textarea_label, with: random_string
+    find(new_review_textarea_selector).send_keys random_string
     click_on one_star_label
     # when
     click_on submit_review_button_label
@@ -61,6 +61,6 @@ class HomeTest < ApplicationSystemTestCase
     click_on add_review_button_label
 
     expect(page).to have_css(highlighted_stars_on_new_review_form_selector, count: 0)
-    expect(page).to have_field(new_review_textarea_label, with: '')
+    expect(page).to have_css(new_review_textarea_selector, text: '')
   end
 end

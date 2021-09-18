@@ -7,7 +7,7 @@ $roboto-font-family: $roboto-font, sans-serif;
 
 .content {
     width: 580px;
-    margin: 118px auto 0 auto;
+    margin: 118px auto;
 }
 
 #main-header {
@@ -42,9 +42,7 @@ $roboto-font-family: $roboto-font, sans-serif;
 #average-rating-stars {
     padding-left: 22px;
 }
-#add-review-btn {
-    margin-left: auto;
-    padding: 14px 24px 11px 24px;
+button {
     cursor: pointer;
 
     /* Label 1 (Bold) */
@@ -56,18 +54,18 @@ $roboto-font-family: $roboto-font, sans-serif;
     /* identical to box height */
     text-align: center;
 
-    /* 797874 */
     color: #797874;
 
-
-    /* FFFFF */
     background: #FFFFFF;
-    /* CCCCCC */
     border: 1px solid #CCCCCC;
     box-sizing: border-box;
     /* shadow-3 */
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
     border-radius: 4px;
+}
+#add-review-btn {
+    margin-left: auto;
+    padding: 14px 24px 11px 24px;
 }
 
 .divider {
@@ -104,13 +102,20 @@ $roboto-font-family: $roboto-font, sans-serif;
     & li > div {
         display: flex;
         align-items: center;
-        margin: 19px 0 20px 0;
+        margin: 15px 0 20px 0;
     }
 
     & .review-rating {
         margin-left: 27px;
         font-weight: bold;
         color: $base-text-color-black;
+    }
+
+    & .review-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 370px;
     }
 }
 
@@ -124,57 +129,133 @@ $roboto-font-family: $roboto-font, sans-serif;
     width: 30px;
     text-align: center;
 
+    &:not(.star-on) svg.svg-star-on {
+        display: none;
+    }
+    &:not(.star-on) svg.svg-star-off {
+        display: inline-block;
+    }
+    &.star-on svg.svg-star-on {
+        display: inline-block;
+    }
+    &.star-on svg.svg-star-off {
+        display: none;
+    }
 }
-
 .svg-star-on,.svg-star-off {
     transform: scale(2)
 }
 
-.star:not(.star-on) svg.svg-star-on {
-    display: none;
-}
-.star:not(.star-on) svg.svg-star-off {
-    display: inline-block;
-}
-.star.star-on svg.svg-star-on {
-    display: inline-block;
-}
-.star.star-on svg.svg-star-off {
-    display: none;
-}
 
 /* padding for error toast */
 div.jq-has-icon {
      padding: 20px 20px 20px 50px;
 }
 
-#new-rating-form {
-}
-#new-rating-stars {
-    font-size: 0; /* remove space between spans */
-}
 
-
-
-/* MODAL */
 .modal {
     display: none;
     position: fixed;
     z-index: 1;
-    padding-top: 100px;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
     background-color: rgba(0,0,0,0.25);
+
+    & .modal-content {
+          background: #FFFFFF;
+          border-radius: 20px;
+          margin: auto;
+          padding: 48px 54px 60px;
+
+          position: relative;
+          top: 50%;
+          transform: translateY(-50%);
+
+          width: calc(680px - 111px);
+          height: calc(503px - 108px);
+      }
 }
 
-/* Modal Content */
-.modal-content {
-    background: #FFFFFF;
-    border-radius: 20px;
-    margin: auto;
-    padding: 20px;
-    width: 80%;
+#new-review-modal {
+}
+#new-review-header {
+    /* What’s your rating? */
+    font-family: $roboto-font-family;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 44px;
+    line-height: 52px;
+
+    margin-block-start: 0;
+    margin-bottom: 40px;
+
+    color: $base-text-color-black;
+}
+#new-review-rating-header {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 28px;
+
+    color: $base-text-color-black;
+    margin-bottom: 36px;
+}
+#new-rating-stars {
+    font-size: 0; /* remove space between spans */
+    margin-left: -2px;
+}
+#new-review-review-label {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 28px;
+
+    color: $base-text-color-black;
+
+    display: block;
+    margin: 38px 0 0;
+}
+#new-review-review-textarea-expansion-zone {
+    height: 104px;
+}
+#new-review-review-textarea {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 23px;
+
+    color: #929292;
+
+    width: 100%;
+    min-height: 17px;
+    max-height: 50px;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    padding: 5px;
+    margin-top: -1px;
+    margin-left: -5px;
+
+    /* center vertically as lines grow */
+    position: relative;
+    float: left;
+    top: 50%;
+    transform: translateY(-50%);
+}
+#new-review-review-textarea:empty:before {
+  content: attr(data-placeholder);
+  color: grey;
+}
+#new-review-review-textarea:focus {
+  outline: 0;
+}
+#new-review-submit-btn {
+    margin-top: -1px;
+    padding: 14px 50px 11px 50px;
 }

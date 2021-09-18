@@ -12,7 +12,7 @@ Because:
 
 - the app is simple,
 - the styles are pre-defined and available at figma,
-- the modal component (which is tricky to implement manually) can be handled using a specific modal jQuery plugin.
+- the company probably already has a design system in place which would have the custom style readily available.
 
 We decide it is not necessary to use any CSS framework such as Bootstrap or Tailwind.
 
