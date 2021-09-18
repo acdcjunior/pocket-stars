@@ -7,22 +7,25 @@ function times(times, cb) {
     return Array.from({length: times}, cb)
 }
 
-function displaySuccessToast(message) {
-    $.toast({icon: 'success', text: message, hideAfter : 5000});
-}
-function displayErrorToast(message, errorResponse) {
-    console.error(message, errorResponse);
-    const trimmedErrorMessage = ((msg, n) => msg.substr(0, n) + (msg.length > n ? '...' : ''))(errorResponse.responseText || '', 150);
-    $.toast({
-        icon: 'error',
-        text: message + `<br><br>Error: ${trimmedErrorMessage}`,
-        hideAfter: false
-    });
-}
+const Toast = {
+    displaySuccess(message) {
+        $.toast({icon: 'success', text: message, hideAfter : 5000});
+    },
+    displayError(message, errorResponse) {
+        console.error(message, errorResponse);
+        const trimmedErrorMessage = ((msg, n) => msg.substr(0, n) + (msg.length > n ? '...' : ''))(errorResponse.responseText || '', 150);
+        $.toast({
+            icon: 'error',
+            text: message + `<br><br>Error: ${trimmedErrorMessage}`,
+            hideAfter: false
+        });
+    }
+};
+
 function fetchReviews() {
     return $.ajax({url: "/reviews", dataType: "json"})
         .catch(errorResponse => {
-            displayErrorToast('Oops! Found an error while attempting to fetch the reviews! Please reload the page in a few moments to try again!', errorResponse);
+            Toast.displayError('Oops! Found an error while attempting to fetch the reviews! Please reload the page in a few moments to try again!', errorResponse);
             return [];
         });
 }
@@ -216,7 +219,7 @@ function NewRatingModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
 
             postNewReview(newReview)
                 .done(() => {
-                    displaySuccessToast('Your new review has been added! Thanks!');
+                    Toast.displaySuccess('Your new review has been added! Thanks!');
 
                     selectedRatingModel.resetSelectedRating();
                     reviewTextModel.resetTypedReview();
@@ -226,7 +229,7 @@ function NewRatingModalComponent($newReviewModal, $newReviewStarsRoot, $newRevie
                     onNewReviewSaved();
                 })
                 .fail((errorResponse) => {
-                    displayErrorToast('Oops! Found an error while attempting to save your new reviews! Please wait a few moments and try again!', errorResponse);
+                    Toast.displayError('Oops! Found an error while attempting to save your new reviews! Please wait a few moments and try again!', errorResponse);
                 });
         });
     }
