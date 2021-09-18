@@ -1,50 +1,6 @@
 <% provide(:pageTitle, "The Minimalist Entrepreneur | Ratings") %>
 
-<div class="content">
-  <h1 id="main-header">The Minimalist Entrepreneur</h1>
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<div id="home-root"></div>
 
-  <div id="average-rating-box">
-    <span id="average-rating"></span>
-    <div id="average-rating-stars">
-      <span class="star defs"></span>
-      <span class="star"></span>
-      <span class="star"></span>
-      <span class="star"></span>
-      <span class="star"></span>
-    </div>
-
-    <button id="add-review-btn">Add review</button>
-  </div>
-
-  <hr class="divider">
-
-  <h2 id="reviews-header">Reviews</h2>
-
-  <ul id="review-list">
-    <li><div class="notice">Loading reviews...</div></li>
-  </ul>
-
-  <div id="new-review-modal" class="modal">
-    <div class="modal-content">
-      <h1 id="new-review-header">What’s your rating?</h1>
-
-      <h3 id="new-review-rating-header">Rating</h3>
-      <div id="new-rating-stars">
-        <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as one star"></span>
-        <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as two stars"></span>
-        <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as three stars"></span>
-        <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as four stars"></span>
-        <span class="star" tabindex="0" role="button" aria-pressed="false" aria-label="Rate as five stars"></span>
-      </div>
-
-      <label for="new-review-review-textarea" id="new-review-review-label">Review</label>
-      <div id="new-review-review-textarea-expansion-zone">
-        <div id="new-review-review-textarea" role="textbox" contenteditable data-placeholder="Start typing..."></div>
-      </div>
-
-      <button id="new-review-submit-btn" data-submitting-text="Submitting..." data-submitted-text="Submit review">Submit review</button>
-    </div>
-    <div id="new-review-submit-block" style="display: none"></div>
-  </div>
-</div>
-<%= javascript_pack_tag 'hello_react' %>
+<%= javascript_pack_tag 'home' %>
