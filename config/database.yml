@@ -51,6 +51,7 @@ test:
 #
 production:
   <<: *default
+  url: <%= ENV['CLEARDB_DATABASE_URL'] %>
   database: pocket_stars_production
   username: pocket_stars
   password: <%= ENV['POCKET_STARS_DATABASE_PASSWORD'] %>
