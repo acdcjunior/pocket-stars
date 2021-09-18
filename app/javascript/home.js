@@ -108,6 +108,8 @@ function NewReviewModalComponent(
             } else {
                 selectedRating = rating;
             }
+            $stars.attr('aria-pressed', 'false')
+                .slice(0, selectedRating).attr('aria-pressed', 'true')
         }
         const resetSelectedRating = () => {
             selectNewRating(0);
