@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewsController < ApplicationController
-  before_action :set_review, only: %i[show edit update destroy]
-
   # GET /reviews - lists all reviews
   def index
     render json: Review.all
@@ -23,29 +21,6 @@ class ReviewsController < ApplicationController
   # VIEW GET /reviews/new
   def new
     @review = Review.new
-  end
-
-  # VIEW GET /reviews/1/edit
-  def edit; end
-
-  # used by edit view
-  def update
-    if @review.update(review_params)
-      render json: true, status: :ok
-    else
-      render json: @review.errors, status: :unprocessable_entity
-    end
-  end
-
-  # used by edit view
-  def destroy
-    @review.destroy
-    head :no_content
-  end
-
-  # Use callbacks to share common setup or constraints between actions.
-  def set_review
-    @review = Review.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.

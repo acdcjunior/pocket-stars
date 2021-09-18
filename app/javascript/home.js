@@ -43,7 +43,6 @@ function reviewComponent(review) {
             .append($("<span>").append(starsComponent(review.rating)))
             .append($("<span>", { text: review.rating }).addClass('review-rating'))
             .append($("<span>", { text: `, ${review.review}` }).addClass('review-text').attr('title', review.review))
-            // .append($(`<a href='/reviews/${review.id}/edit' style="display: inline-block; margin-left: 10px">EDIT</a>`))
     );
 }
 function replaceReviews(reviews) {

@@ -37,28 +37,4 @@ class ReviewsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response 422
   end
-
-  # TODO: actions below are kept temporarily for development purposes, they wont be in the MVP
-  test 'should get new' do
-    get new_review_url
-    assert_response :success
-  end
-
-  test 'should get edit' do
-    get edit_review_url(@review)
-    assert_response :success
-  end
-
-  test 'should update review' do
-    patch review_url(@review), as: :json, params: { review: { rating: @review.rating, review: @review.review } }
-    assert_response :success
-  end
-
-  test 'should destroy review' do
-    assert_difference('Review.count', -1) do
-      delete review_url(@review)
-    end
-
-    assert_response :success
-  end
 end
