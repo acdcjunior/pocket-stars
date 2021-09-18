@@ -192,7 +192,7 @@ function NewReviewModalComponent(
             $reviewModal.hide();
         }
         const handleClickOutsideModal = () => {
-            $(window).click((event) => {
+            $(window).mousedown((event) => {
                 if (event.target === $reviewModal[0]) {
                     hideModal();
                 }
