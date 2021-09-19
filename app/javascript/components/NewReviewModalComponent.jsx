@@ -11,6 +11,8 @@ const STAR_PAIRS = [...STARS]
     .sort((a, b) => a.order - b.order)
     .reduce((acc, _, i, arr) => (i % 2 === 0) ? [...acc, arr.slice(i, i + 2)] : acc, []);
 
+const keysThatShouldToggleStars = [' ', 'Enter'];
+
 /**
  * Relevant features:
  * - parent can get selected rating
@@ -58,6 +60,7 @@ const SelectRatingComponent = ({selectedRating, onSelectRating, flashInvalid}) =
                         onMouseEnter={() => setHighlightedRating(halfRating.rating) }
                         onMouseLeave={resetHighlightedStars}
                         onClick={() => onSelectRating(halfRating.rating)}
+                        onKeyUp={(e) => keysThatShouldToggleStars.includes(e.key) && onSelectRating(halfRating.rating)}
                     >
                     </span>
                     <span
@@ -69,6 +72,7 @@ const SelectRatingComponent = ({selectedRating, onSelectRating, flashInvalid}) =
                         onMouseEnter={() => setHighlightedRating(fullRating.rating) }
                         onMouseLeave={resetHighlightedStars}
                         onClick={() => onSelectRating(fullRating.rating)}
+                        onKeyUp={(e) => keysThatShouldToggleStars.includes(e.key) && onSelectRating(fullRating.rating)}
                     >
                     </span>
                 </span>
