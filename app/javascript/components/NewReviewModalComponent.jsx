@@ -2,10 +2,14 @@ import React, {useEffect, useRef, useState} from 'react';
 import $ from "jquery";
 import {Toast} from "./Toast";
 import {StarComponent} from "./StarComponent";
-import {STARS, validateNewReview} from "../app/reviewsModel";
+import {STARS, ZERO_STARS, ZERO_STARTS_VALUE, createNewReview} from "../app/reviewsModel";
 
 const SHAKE_EFFECT_CLASSNAME = 'shake';
 
+const STAR_PAIRS = [...STARS]
+    .filter(s => s !== ZERO_STARS)
+    .sort((a, b) => a.order - b.order)
+    .reduce((acc, _, i, arr) => (i % 2 === 0) ? [...acc, arr.slice(i, i + 2)] : acc, []);
 
 /**
  * Relevant features:
@@ -20,38 +24,53 @@ const SHAKE_EFFECT_CLASSNAME = 'shake';
  * - click updates the selected rating
  */
 const SelectRatingComponent = ({selectedRating, onSelectRating, flashInvalid}) => {
-    const [highlightedRating, setHighlightedRating] = useState(selectedRating)
+    const [highlightedRating, setHighlightedRating] = useState(selectedRating);
 
     useEffect(() => {
         // when selectedRating is reset by the parent
         setHighlightedRating(selectedRating);
     }, [selectedRating]);
 
-    const handleSelectNewRating = (rating) => {
-        if (selectedRating === rating) {
-            onSelectRating(0);
-        } else {
-            onSelectRating(rating);
-        }
-    }
     const resetHighlightedStars = () => {
         setHighlightedRating(selectedRating);
     }
 
     return (
         <div id="new-rating-stars" className={flashInvalid ? SHAKE_EFFECT_CLASSNAME : ''}>
-            {STARS.map(({name, rating}) =>
-                <span
-                    key={rating}
-                    tabIndex="0"
-                    role="button"
-                    aria-pressed={selectedRating >= rating}
-                    aria-label={`Rate as ${name} star`}
-                    onMouseEnter={() => setHighlightedRating(rating)}
-                    onMouseLeave={resetHighlightedStars}
-                    onClick={() => handleSelectNewRating(rating)}
-                >
-                    <StarComponent on={highlightedRating >= rating}/>
+            {STAR_PAIRS.map(([halfRating, fullRating]) =>
+                <span key={halfRating.order}>
+                    <StarComponent
+                        starType={
+                            fullRating.equalToOrLessThan(highlightedRating)
+                                ? 'FULL'
+                                : (halfRating.equalToOrLessThan(highlightedRating)
+                                    ? 'HALF'
+                                    : 'EMPTY'
+                                )
+                        }
+                    />
+                    <span
+                        className='star-first-half-click-overlay'
+                        tabIndex="0"
+                        role="button"
+                        aria-pressed={halfRating.equalToOrGreaterThan(selectedRating)}
+                        aria-label={`Rate as ${halfRating.name}`}
+                        onMouseEnter={() => setHighlightedRating(halfRating.rating) }
+                        onMouseLeave={resetHighlightedStars}
+                        onClick={() => onSelectRating(halfRating.rating)}
+                    >
+                    </span>
+                    <span
+                        className='star-second-half-click-overlay'
+                        tabIndex="0"
+                        role="button"
+                        aria-pressed={fullRating.equalToOrGreaterThan(selectedRating)}
+                        aria-label={`Rate as ${fullRating.name}`}
+                        onMouseEnter={() => setHighlightedRating(fullRating.rating) }
+                        onMouseLeave={resetHighlightedStars}
+                        onClick={() => onSelectRating(fullRating.rating)}
+                    >
+                    </span>
                 </span>
             )}
         </div>
@@ -141,18 +160,25 @@ const SubmitNewReviewButtonComponent = ({onSubmitNewReview}) => {
  * - escape key hides the modal
  */
 export const NewReviewModalComponent = ({showModal, onHideModalRequested, onNewReviewSaved}) => {
-    const [selectedRating, setSelectedRating] = useState(0);
+    const [selectedRating, setSelectedRating] = useState(ZERO_STARTS_VALUE);
     const [flashInvalidRating, setFlashInvalidRating] = useState(false);
     const [typedReview, setTypedReview] = useState('');
     const [flashInvalidTypedReview, setFlashInvalidTypedReview] = useState(false);
 
     const hideModal = () => onHideModalRequested();
     const resetSelectedRating = () => {
-        setSelectedRating(0);
+        setSelectedRating(ZERO_STARTS_VALUE);
     };
     const resetTypedReview = () => {
         setTypedReview('');
     };
+    const handleSelectNewRating = (rating) => {
+        if (selectedRating === rating) {
+            setSelectedRating(ZERO_STARTS_VALUE);
+        } else {
+            setSelectedRating(rating);
+        }
+    }
 
     useEffect(() => {
         $(window).on('mousedown.clickOutsideClosesModal', (e) => {
@@ -183,17 +209,12 @@ export const NewReviewModalComponent = ({showModal, onHideModalRequested, onNewR
             }
         });
 
-        const newReview = {
-            rating: selectedRating,
-            review: typedReview
-        };
-
-        const validationResult = validateNewReview(newReview);
-        if (validationResult.anyInvalid) {
-            if (validationResult.isRatingInvalid) {
+        const validationResult = createNewReview({ selectedRating, typedReview });
+        if (validationResult.thereAreInvalidParameters) {
+            if (validationResult.isSelectedRatingInvalid) {
                 setFlashInvalidRating(true);
             }
-            if (validationResult.isReviewInvalid) {
+            if (validationResult.isTypedReviewInvalid) {
                 setFlashInvalidTypedReview(true);
             }
             setTimeout(() => {
@@ -203,7 +224,7 @@ export const NewReviewModalComponent = ({showModal, onHideModalRequested, onNewR
             return;
         }
 
-        return postNewReview(newReview)
+        return postNewReview(validationResult.reviewAsModel)
             .done(() => {
                 Toast.displaySuccess('Your new review has been submitted! Thanks!');
 
@@ -227,7 +248,7 @@ export const NewReviewModalComponent = ({showModal, onHideModalRequested, onNewR
                 <h1 id="new-review-header">What’s your rating?</h1>
 
                 <h3 id="new-review-rating-header">Rating</h3>
-                <SelectRatingComponent selectedRating={selectedRating} onSelectRating={setSelectedRating} flashInvalid={flashInvalidRating}/>
+                <SelectRatingComponent selectedRating={selectedRating} onSelectRating={handleSelectNewRating} flashInvalid={flashInvalidRating}/>
 
                 <ReviewTextAreaComponent show={showModal} typedReview={typedReview} onChangeTypedReview={setTypedReview} flashInvalid={flashInvalidTypedReview}/>
 

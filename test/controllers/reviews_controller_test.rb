@@ -19,7 +19,7 @@ class ReviewsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create review' do
     assert_difference('Review.count') do
-      post reviews_url, as: :json, params: { review: { rating: @review.rating, review: @review.review } }
+      post reviews_url, as: :json, params: { review: { rating: @review.rating, review: @review.review, half_star: @review.half_star } }
     end
 
     assert_response 201
@@ -27,14 +27,24 @@ class ReviewsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should validate rating' do
-    post reviews_url, as: :json, params: { review: { rating: 0, review: 'hey' } }
+    post reviews_url, as: :json, params: { review: { rating: 6, review: @review.review, half_star: false } }
 
     assert_response 422
   end
 
   test 'should validate review (text prop)' do
-    post reviews_url, as: :json, params: { review: { rating: 1, review: '' } }
+    post reviews_url, as: :json, params: { review: { rating: 1, review: '', half_star: false } }
 
+    assert_response 422
+  end
+
+  test 'should allow 0.5 rating' do
+    post reviews_url, as: :json, params: { review: { rating: 0, review: @review.review, half_star: true } }
+    assert_response 201
+  end
+
+  test 'should forbid 0.0 rating' do
+    post reviews_url, as: :json, params: { review: { rating: 0, review: @review.review, half_star: false } }
     assert_response 422
   end
 end

@@ -1,6 +1,6 @@
 import React from 'react';
 import {StarComponent} from './StarComponent';
-import {getAverageRating, STARS} from '../app/reviewsModel';
+import {FULL_STARS, getAverageRating, getReviewModelRatingAsDecimal} from '../app/reviewsModel';
 
 
 export const ReviewListComponent = ({ reviews, onAddReviewRequested }) => {
@@ -40,10 +40,20 @@ export const ReviewListComponent = ({ reviews, onAddReviewRequested }) => {
                                 : reviews.map((r, i) => (
                                         <li className='review' key={i}>
                                             <div>
-                                                {STARS.map(({rating: ratingForThisStar}, starKey) => (
-                                                    <StarComponent on={r.rating >= ratingForThisStar} key={starKey}/>
+                                                {FULL_STARS.map(({ asModel: { rating: ratingForThisStar }}, starKey) => (
+                                                    <StarComponent
+                                                        key={starKey}
+                                                        starType={
+                                                            r.rating >= ratingForThisStar
+                                                                ? 'FULL'
+                                                                : ((r.rating === (ratingForThisStar - 1) && r.half_star)
+                                                                        ? 'HALF'
+                                                                        : 'EMPTY'
+                                                                )
+                                                        }
+                                                    />
                                                 ))}
-                                                <span className='review-rating'>{r.rating}</span>
+                                                <span className='review-rating'>{getReviewModelRatingAsDecimal(r)}</span>
                                                 <span className='review-text' title={r.review}>, {r.review}</span>
                                             </div>
                                         </li>

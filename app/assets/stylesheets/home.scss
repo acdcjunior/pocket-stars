@@ -144,6 +144,18 @@ button {
     transform: scale(2)
   }
 }
+.star-first-half-click-overlay {
+  position: absolute;
+  transform: translateX(-34px);
+  width: 17px;
+  height: 36px;
+}
+.star-second-half-click-overlay {
+  position: absolute;
+  transform: translateX(-17px);
+  width: 18px;
+  height: 36px;
+}
 
 /* padding for error toast */
 div.jq-has-icon {
