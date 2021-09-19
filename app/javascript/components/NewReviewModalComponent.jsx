@@ -136,8 +136,11 @@ const SubmitNewReviewButtonComponent = ({onSubmitNewReview}) => {
 
     const handleSubmitNewReview = async () => {
         setSubmitting(true);
-        await onSubmitNewReview();
-        setSubmitting(false);
+        try {
+            await onSubmitNewReview();
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
