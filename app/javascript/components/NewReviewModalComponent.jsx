@@ -2,15 +2,9 @@ import React, {useEffect, useRef, useState} from 'react';
 import $ from "jquery";
 import {Toast} from "./Toast";
 import {StarComponent} from "./StarComponent";
+import {STARS, validateNewReview} from "../app/reviewsModel";
 
 const SHAKE_EFFECT_CLASSNAME = 'shake';
-const STARS = [
-    { rating: 1, name: 'one' },
-    { rating: 2, name: 'two' },
-    { rating: 3, name: 'three' },
-    { rating: 4, name: 'four' },
-    { rating: 5, name: 'five' },
-];
 
 
 /**
@@ -184,17 +178,6 @@ export const NewReviewModalComponent = ({ showModal, onHideModalRequested, onNew
                 authenticity_token: $('[name="csrf-token"]').attr('content')
             }
         });
-
-        const validRatings = [1, 2, 3, 4, 5];
-        const validateNewReview = ({ rating, review }) => {
-            const isRatingInvalid = !validRatings.includes(rating);
-            const isReviewInvalid = !review.trim().length > 0;
-            return {
-                isRatingInvalid,
-                isReviewInvalid,
-                anyInvalid: isRatingInvalid || isReviewInvalid
-            }
-        };
 
         const newReview = {
             rating: selectedRating,

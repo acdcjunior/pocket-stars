@@ -1,14 +1,12 @@
 import React from 'react';
 import {StarComponent} from "./StarComponent";
+import {getAverageRating, STARS} from "../app/reviewsModel";
+
+
 
 
 export const ReviewListComponent = ({ reviews, onAddReviewRequested }) => {
-
-    const stars = [1,2,3,4,5]
-
-    const averageRating = !reviews?.length
-        ? '0'
-        : (reviews.map(r => r.rating).reduce((r1, r2) => r1 + r2) / reviews.length).toFixed(1).replace(/\.0$/, '');
+    const averageRating = getAverageRating(reviews);
     const averageRatingStars = Math.ceil(+averageRating);
 
     return (
@@ -48,7 +46,7 @@ export const ReviewListComponent = ({ reviews, onAddReviewRequested }) => {
                                 reviews.map((r, i) => (
                                         <li className='review' key={i}>
                                             <div>
-                                                {stars.map((ratingForThisStar, starKey) => (
+                                                {STARS.map(({rating: ratingForThisStar}, starKey) => (
                                                     <StarComponent on={r.rating >= ratingForThisStar} key={starKey} />
                                                 ))}
                                                 <span className='review-rating'>{r.rating}</span>
