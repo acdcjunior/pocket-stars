@@ -5,12 +5,12 @@ require 'application_system_test_case'
 class HomeTest < ApplicationSystemTestCase
   add_review_button_label = 'Add review'
   star_selector = '.star'
-  highlighted_star_selector = '.star.star-on'
+  highlighted_star_selector = '.star.star-full'
 
   review_on_review_list_selector = 'li.review'
 
   whats_your_rating_header_text = 'What’s your rating?'
-  highlighted_stars_on_new_review_form_selector = '#new-rating-stars .star.star-on'
+  highlighted_stars_on_new_review_form_selector = '#new-rating-stars .star.star-full'
   one_star_label = 'Rate as one star'
   new_review_textarea_selector = '#new-review-review-textarea'
   submit_review_button_label = 'Submit review'
