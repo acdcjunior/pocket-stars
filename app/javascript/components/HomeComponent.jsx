@@ -1,35 +1,41 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import $ from "jquery";
 import {ReviewListComponent, ReviewListJQueryComponent} from "./ReviewListComponent";
-import {NewReviewModalComponent, NewReviewModalJQueryComponent} from "./NewReviewModalComponent";
+import {NewReviewModalComponent} from "./NewReviewModalComponent";
 
-export const HomeComponent = () => (
-    <div className="content">
-        <h1 id="main-header">The Minimalist Entrepreneur</h1>
+export const HomeComponent = () => {
+    const [showModal, setShowModal] = useState(false);
+    const [renderReviewListCallback, setRenderReviewListCallback] = useState(() => () => {
+        alert('was called before should!'); // this code will be removed when ReviewListJQueryComponent is refactored
+    })
 
-        <ReviewListComponent />
+    const handleNewReviewSaved = () => {
+        renderReviewListCallback();
+        setTimeout(() => {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); // scroll to bottom of page
+        }, 300);
+    };
 
-        <NewReviewModalComponent />
-    </div>
-)
+    useEffect(() => {
+        const { renderReviewList } = ReviewListJQueryComponent($('#review-list'), $('#average-rating'), $('#average-rating-stars'));
+        setRenderReviewListCallback(() => renderReviewList);
 
-export const initHome = () => {
-    const { renderReviewList } = ReviewListJQueryComponent($('#review-list'), $('#average-rating'), $('#average-rating-stars'));
+        $('#add-review-btn').click(() => {
+            setShowModal(true);
+        });
+    }, [])
 
-    const { openModal } = NewReviewModalJQueryComponent(
-        $('#new-review-modal'),
-        $('#new-rating-stars'),
-        $('#new-review-review-textarea'),
-        $('#new-review-submit-btn'),
-        $('#new-review-submit-block'),
-        () => {
-            renderReviewList();
-            setTimeout(() => {
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); // scroll to bottom of page
-            }, 300);
-        })
+    return (
+        <div className="content">
+            <h1 id="main-header">The Minimalist Entrepreneur</h1>
 
-    $('#add-review-btn').click(() => {
-        openModal();
-    });
+            <ReviewListComponent/>
+
+            <NewReviewModalComponent
+                showModal={showModal}
+                onHideModalRequested={() => setShowModal(false)}
+                onNewReviewSaved={handleNewReviewSaved}
+            />
+        </div>
+    );
 }

@@ -1,257 +1,255 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import $ from "jquery";
 import {Toast} from "./Toast";
-import {$starOff, $starOn} from "./StarComponent";
+import {StarComponent} from "./StarComponent";
 
 const SHAKE_EFFECT_CLASSNAME = 'shake';
+const STARS = [
+    { rating: 1, name: 'one' },
+    { rating: 2, name: 'two' },
+    { rating: 3, name: 'three' },
+    { rating: 4, name: 'four' },
+    { rating: 5, name: 'five' },
+];
 
 
-function SelectRatingJQueryComponent($reviewStarsRoot) {
-    const $stars = $reviewStarsRoot.children();
-    let selectedRating = 0;
+/**
+ * Relevant features:
+ * - parent can get selected rating
+ * - parent can reset selected rating, which will set the rating to zero and reset the highlighted stars to none
+ * - parent can flash invalid, which will shake it
+ * - clicking a star toggles its aria-pressed
+ * - clicking a star sets its value as new rating, except if it already is (in which case the rating is set to zero)
+ * - stars:
+ * - mouseenter highlights the stars up to its rating
+ * - mouseleave resets the highlighted stars to selected rating
+ * - click updates the selected rating
+ */
+const SelectRatingComponent = ({ selectedRating, onSelectRating, flashInvalid }) => {
+    const [highlightedRating, setHighlightedRating] = useState(selectedRating)
 
-    const selectNewRating = (rating) => {
+    useEffect(() => {
+        // when selectedRating is reset by the parent
+        setHighlightedRating(selectedRating);
+    }, [selectedRating]);
+
+    const handleSelectNewRating = (rating) => {
         if (selectedRating === rating) {
-            selectedRating = 0;
+            onSelectRating(0);
         } else {
-            selectedRating = rating;
+            onSelectRating(rating);
         }
-        $stars.attr('aria-pressed', 'false')
-            .slice(0, selectedRating).attr('aria-pressed', 'true')
-    }
-    const resetSelectedRating = () => {
-        selectNewRating(0);
-        resetHighlightedStars();
-    };
-    const highlightStarsUpTo = (rating) => {
-        $stars.removeClass('star-on')
-            .slice(0, rating).addClass('star-on')
     }
     const resetHighlightedStars = () => {
-        highlightStarsUpTo(selectedRating);
-    }
-    const flashInvalid = () => {
-        $reviewStarsRoot.addClass(SHAKE_EFFECT_CLASSNAME);
-        setTimeout(() => $reviewStarsRoot.removeClass(SHAKE_EFFECT_CLASSNAME), 300);
-    }
-    const initView = () => {
-        $reviewStarsRoot.children('span').append([$starOn.clone(), $starOff.clone()]);
-    }
-    const bindEventsOnView = () => {
-        $stars.each((i, e) => {
-            const ratingForThisStar = i + 1;
-            $(e).on({
-                mouseenter: () => highlightStarsUpTo(ratingForThisStar),
-                mouseleave: resetHighlightedStars,
-                click: () => selectNewRating(ratingForThisStar)
-            });
-        });
+        setHighlightedRating(selectedRating);
     }
 
-    initView();
-    bindEventsOnView();
-    return {
-        get selectedRating() {
-            return selectedRating;
-        },
-        resetSelectedRating,
-        flashInvalid
-    };
+    return (
+        <div id="new-rating-stars" className={flashInvalid ? SHAKE_EFFECT_CLASSNAME : ''}>
+
+            const n = 8; // Or something else
+
+            {STARS.map(({name, rating}) =>
+                <span
+                    key={rating}
+                    className="star"
+                    tabIndex="0"
+                    role="button"
+                    aria-pressed={ selectedRating >= rating }
+                    aria-label={`Rate as ${name} star`}
+                    onMouseEnter={() => setHighlightedRating(rating)}
+                    onMouseLeave={resetHighlightedStars}
+                    onClick={() => handleSelectNewRating(rating)}
+                >
+                    <StarComponent on={highlightedRating >= rating}/>
+                </span>
+            )}
+        </div>
+    )
 }
 
+/**
+ * Relevant features:
+ * - parent can get typed review
+ * - parent can reset typed review, which will just empty the typed text
+ * - parent can flashInvalid, which will shake it and bring focus to the textarea
+ * - parent can focus the textarea, which will select the whole typed text if there is any
+ */
+const ReviewTextAreaComponent = ({ show, typedReview, onChangeTypedReview, flashInvalid }) => {
+    const textareaEl = useRef(null);
 
-function ReviewTextAreaJQueryComponent($reviewTextArea) {
-    const flashInvalidAndBringFocus = () => {
-        $reviewTextArea.parent().addClass(SHAKE_EFFECT_CLASSNAME);
-        setTimeout(() => $reviewTextArea.parent().removeClass(SHAKE_EFFECT_CLASSNAME), 300);
-        $reviewTextArea.focus();
-    }
-    const resetTypedReview = () => {
-        $reviewTextArea.text('')
-    }
-    const getTypedReviewText = () => $reviewTextArea.text().trim();
-
-    $reviewTextArea.blur(() => {
-        // workaround contenteditable bug that does not show placeholder after some multi-line text has been entered and deleted
-        if (getTypedReviewText() === '') {
-            resetTypedReview();
-        }
-    });
-
-    return {
-        get typedReview() {
-            return getTypedReviewText();
-        },
-        resetTypedReview,
-        flashInvalidAndBringFocus,
-        focusTextArea: () => {
-            $reviewTextArea.focus();
-            if (getTypedReviewText() !== '') {
+    useEffect(() => {
+        if (show) {
+            textareaEl.current.focus();
+            if (typedReview !== '') {
                 // if text exists, then the modal has been shown and was closed without a submit...
                 // ...so, select previously typed text to make it easier for the user to re-type
-                window.getSelection().selectAllChildren($reviewTextArea[0]);
+                window.getSelection().selectAllChildren(textareaEl.current);
             }
         }
-    };
-}
+    }, [show]);
 
-function ModalJQuery($reviewModal, reviewTextAreaComponent) {
-    const openModal = () => {
-        $reviewModal.show();
-        reviewTextAreaComponent.focusTextArea();
+    useEffect(() => {
+        if (flashInvalid) {
+            textareaEl.current.focus();
+        }
+    }, [flashInvalid]);
+
+    const handleTextAreaBlur = (e) => {
+        // .trim() is a workaround for a contenteditable bug that does not show placeholder after some multi-line text has been entered and deleted
+        onChangeTypedReview(e.currentTarget.textContent.trim())
     }
-    const hideModal = () => {
-        $reviewModal.hide();
-    }
-    const handleClickOutsideModal = () => {
-        $(window).mousedown((event) => {
-            if (event.target === $reviewModal[0]) {
+
+    return (
+        <>
+            <label htmlFor="new-review-review-textarea" id="new-review-review-label">Review</label>
+            <div id="new-review-review-textarea-expansion-zone" className={flashInvalid ? SHAKE_EFFECT_CLASSNAME : ''}>
+                <div
+                    id="new-review-review-textarea" ref={textareaEl} role="textbox" contentEditable data-placeholder="Start typing..."
+                    onBlur={handleTextAreaBlur}
+                    suppressContentEditableWarning={true}
+                >
+                    {typedReview}
+                </div>
+            </div>
+        </>
+    )
+};
+
+
+/**
+ * Relevant features:
+ * - parent can listen for submit button clicks
+ * - div overlay that blocks any click is shown while the submit click is being handled (to prevent bad stuff like re-submits)
+ */
+const SubmitNewReviewButtonComponent = ({ onSubmitNewReview }) => {
+    const [submitting, setSubmitting] = useState(false);
+
+    const handleSubmitNewReview = async () => {
+        setSubmitting(true);
+        await onSubmitNewReview();
+        setSubmitting(false);
+    };
+
+    return (
+        <>
+            <button id="new-review-submit-btn" onClick={handleSubmitNewReview}>{submitting ? 'Submitting...' : 'Submit review'}</button>
+            <div id="new-review-submit-block-overlay" style={{display: submitting ? 'block' : 'none'}}/>
+        </>
+    )
+};
+
+
+/**
+ * Relevant features:
+ * - parent can open, which will
+ *     - show the modal
+ *     - 'focus' the textarea
+ * - parent can hide, which will
+ *     - hide the modal
+ * - click outside modal hides it (or rather request that the parent hides it)
+ * - escape key hides the modal
+ */
+export const NewReviewModalComponent = ({ showModal, onHideModalRequested, onNewReviewSaved }) => {
+    const [selectedRating, setSelectedRating] = useState(0);
+    const [flashInvalidRating, setFlashInvalidRating] = useState(false);
+    const [typedReview, setTypedReview] = useState('');
+    const [flashInvalidTypedReview, setFlashInvalidTypedReview] = useState(false);
+
+    const hideModal = () => onHideModalRequested();
+    const resetSelectedRating = () => { setSelectedRating(0); };
+    const resetTypedReview = () => { setTypedReview(''); };
+
+    useEffect(() => {
+        $(window).on('mousedown.clickOutsideClosesModal', (e) => {
+            if (e.target.getAttribute('id') === 'new-review-modal') {
                 hideModal();
             }
         });
-    };
-    const handleEscapeKeyPress = () => {
-        $(document).keyup(function (e) {
+        $(document).on('keyup.escapeKeyClosesModal', (e) => {
             if (e.key === 'Escape') {
                 hideModal();
             }
         });
-    };
-
-    const bindEvents = () => {
-        handleClickOutsideModal();
-        handleEscapeKeyPress();
-    }
-    bindEvents();
-
-    return {
-        openModal,
-        hideModal
-    }
-}
-
-export function NewReviewModalJQueryComponent(
-    $newReviewModal, $newReviewStarsRoot, $newReviewReviewTextArea, $newReviewSubmitButton, $newReviewSubmitBlock, onNewReviewSaved
-) {
-
-    const postNewReview = review => $.ajax({
-        type: 'POST',
-        url: '/reviews',
-        dataType: 'json',
-        data: {
-            review,
-            authenticity_token: $('[name="csrf-token"]').attr('content')
+        return () => {
+            $(window).off('mousedown.clickOutsideClosesModal');
+            $(document).off('keyup.escapeKeyClosesModal');
         }
-    });
+    }, []);
 
-    const validRatings = [1, 2, 3, 4, 5];
-    const validateNewReview = ({ rating, review }) => {
-        const isRatingInvalid = !validRatings.includes(rating);
-        const isReviewInvalid = !review.trim().length > 0;
-        return {
-            isRatingInvalid,
-            isReviewInvalid,
-            anyInvalid: isRatingInvalid || isReviewInvalid
-        }
-    };
 
-    const markFormAsSubmittingNow = () => {
-        $newReviewSubmitBlock.show();
-        $newReviewSubmitButton.text($newReviewSubmitButton.data('submitting-text'));
-    };
-    const markFormAsSubmissionCompleted = () => {
-        $newReviewSubmitBlock.hide();
-        $newReviewSubmitButton.text($newReviewSubmitButton.data('submitted-text'));
-    };
-
-    const bindSubmitClick = (selectedRatingModel, reviewTextModel, modal) => {
-        const submitReview = () => {
-            const newReview = {
-                rating: selectedRatingModel.selectedRating,
-                review: reviewTextModel.typedReview.trim()
-            };
-
-            const validationResult = validateNewReview(newReview);
-            if (validationResult.anyInvalid) {
-                if (validationResult.isRatingInvalid) {
-                    selectedRatingModel.flashInvalid();
-                }
-                if (validationResult.isReviewInvalid) {
-                    reviewTextModel.flashInvalidAndBringFocus();
-                }
-                return;
+    const handleSubmitNewReview = () => {
+        const postNewReview = review => $.ajax({
+            type: 'POST',
+            url: '/reviews',
+            dataType: 'json',
+            data: {
+                review,
+                authenticity_token: $('[name="csrf-token"]').attr('content')
             }
+        });
 
-            markFormAsSubmittingNow();
-            postNewReview(newReview)
-                .done(() => {
-                    Toast.displaySuccess('Your new review has been submitted! Thanks!');
-
-                    selectedRatingModel.resetSelectedRating();
-                    reviewTextModel.resetTypedReview();
-
-                    modal.hideModal()
-
-                    onNewReviewSaved();
-                })
-                .fail((errorResponse) => {
-                    Toast.displayError(
-                        'Oops! Found an error while attempting to save your new reviews! Please wait a few moments and try again!',
-                        errorResponse
-                    );
-                })
-                .always(() => {
-                    markFormAsSubmissionCompleted();
-                });
+        const validRatings = [1, 2, 3, 4, 5];
+        const validateNewReview = ({ rating, review }) => {
+            const isRatingInvalid = !validRatings.includes(rating);
+            const isReviewInvalid = !review.trim().length > 0;
+            return {
+                isRatingInvalid,
+                isReviewInvalid,
+                anyInvalid: isRatingInvalid || isReviewInvalid
+            }
         };
 
-        $newReviewSubmitButton.click(submitReview);
+        const newReview = {
+            rating: selectedRating,
+            review: typedReview
+        };
+
+        const validationResult = validateNewReview(newReview);
+        if (validationResult.anyInvalid) {
+            if (validationResult.isRatingInvalid) {
+                setFlashInvalidRating(true);
+            }
+            if (validationResult.isReviewInvalid) {
+                setFlashInvalidTypedReview(true);
+            }
+            setTimeout(() => {
+                setFlashInvalidRating(false);
+                setFlashInvalidTypedReview(false);
+            }, 300);
+            return;
+        }
+
+        return postNewReview(newReview)
+            .done(() => {
+                Toast.displaySuccess('Your new review has been submitted! Thanks!');
+
+                resetSelectedRating();
+                resetTypedReview();
+                hideModal();
+
+                onNewReviewSaved();
+            })
+            .fail((errorResponse) => {
+                Toast.displayError(
+                    'Oops! Found an error while attempting to save your new reviews! Please wait a few moments and try again!',
+                    errorResponse
+                );
+            });
     };
 
-    function init() {
-        const selectedRatingModel = SelectRatingJQueryComponent($newReviewStarsRoot);
-        const reviewTextAreaComponent = ReviewTextAreaJQueryComponent($newReviewReviewTextArea);
-        const modal = ModalJQuery($newReviewModal, reviewTextAreaComponent);
-
-        bindSubmitClick(selectedRatingModel, reviewTextAreaComponent, modal);
-
-        return {
-            openModal: modal.openModal
-        }
-    }
-
-    const { openModal } = init();
-
-    return {
-        openModal
-    }
-}
-
-
-export const NewReviewModalComponent = () => {
-
     return (
-        <div id="new-review-modal" className="modal">
+        <div id="new-review-modal" className={'modal ' + (showModal ? '' : 'modal-hide')}>
             <div className="modal-content">
                 <h1 id="new-review-header">What’s your rating?</h1>
 
                 <h3 id="new-review-rating-header">Rating</h3>
-                <div id="new-rating-stars">
-                    <span className="star" tabIndex="0" role="button" aria-pressed="false" aria-label="Rate as one star"/>
-                    <span className="star" tabIndex="0" role="button" aria-pressed="false" aria-label="Rate as two stars"/>
-                    <span className="star" tabIndex="0" role="button" aria-pressed="false" aria-label="Rate as three stars"/>
-                    <span className="star" tabIndex="0" role="button" aria-pressed="false" aria-label="Rate as four stars"/>
-                    <span className="star" tabIndex="0" role="button" aria-pressed="false" aria-label="Rate as five stars"/>
-                </div>
+                <SelectRatingComponent selectedRating={selectedRating} onSelectRating={setSelectedRating} flashInvalid={flashInvalidRating} />
 
-                <label htmlFor="new-review-review-textarea" id="new-review-review-label">Review</label>
-                <div id="new-review-review-textarea-expansion-zone">
-                    <div id="new-review-review-textarea" role="textbox" contentEditable data-placeholder="Start typing..."/>
-                </div>
+                <ReviewTextAreaComponent show={showModal} typedReview={typedReview} onChangeTypedReview={setTypedReview} flashInvalid={flashInvalidTypedReview} />
 
-                <button id="new-review-submit-btn" data-submitting-text="Submitting..." data-submitted-text="Submit review">Submit review</button>
+                <SubmitNewReviewButtonComponent onSubmitNewReview={handleSubmitNewReview} />
             </div>
-            <div id="new-review-submit-block" style={{display: 'none'}}/>
         </div>
     );
-}
+};

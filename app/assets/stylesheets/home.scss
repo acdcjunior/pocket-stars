@@ -164,33 +164,31 @@ div.jq-has-icon {
 }
 
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.25);
-
-    & .modal-content {
-          background: #FFFFFF;
-          border-radius: 20px;
-          margin: auto;
-          padding: 48px 54px 60px;
-
-          position: relative;
-          top: 50%;
-          transform: translateY(-50%);
-
-          width: calc(680px - 111px);
-          height: calc(503px - 108px);
-      }
-}
-
 #new-review-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.25);
+
+  & .modal-content {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 48px 54px 60px;
+
+    width: calc(680px - 111px);
+    height: calc(503px - 108px);
+  }
+
+  &.modal-hide {
+    display: none;
+  }
 }
 #new-review-header {
     /* What’s your rating? */
@@ -270,15 +268,14 @@ div.jq-has-icon {
     padding: 14px 50px 11px 50px;
     width: 218px;
 }
-#new-review-submit-block {
-  z-index: 2;
-  position: absolute;
-  height: 100%;
+#new-review-submit-block-overlay {
+  opacity: 0;
+  position: fixed;
   width: 100%;
+  height: 100%;
+  z-index: 2;
   top: 0;
   left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0);
 }
 
 
