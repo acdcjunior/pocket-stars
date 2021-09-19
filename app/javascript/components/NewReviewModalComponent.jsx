@@ -46,13 +46,9 @@ const SelectRatingComponent = ({ selectedRating, onSelectRating, flashInvalid })
 
     return (
         <div id="new-rating-stars" className={flashInvalid ? SHAKE_EFFECT_CLASSNAME : ''}>
-
-            const n = 8; // Or something else
-
             {STARS.map(({name, rating}) =>
                 <span
                     key={rating}
-                    className="star"
                     tabIndex="0"
                     role="button"
                     aria-pressed={ selectedRating >= rating }

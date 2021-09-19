@@ -140,23 +140,10 @@ button {
     width: 30px;
     text-align: center;
 
-    &:not(.star-on) svg.svg-star-on {
-        display: none;
-    }
-    &:not(.star-on) svg.svg-star-off {
-        display: inline-block;
-    }
-    &.star-on svg.svg-star-on {
-        display: inline-block;
-    }
-    &.star-on svg.svg-star-off {
-        display: none;
-    }
-}
-.svg-star-on,.svg-star-off {
+  & svg {
     transform: scale(2)
+  }
 }
-
 
 /* padding for error toast */
 div.jq-has-icon {
@@ -214,7 +201,11 @@ div.jq-has-icon {
     margin-bottom: 36px;
 }
 #new-rating-stars {
-    margin-left: -2px;
+  margin-left: -2px;
+
+  & [role='button'] {
+    display: inline-block; /* make them expand to child size so they are clickable */
+  }
 }
 #new-review-review-label {
     font-family: $roboto-font-family;

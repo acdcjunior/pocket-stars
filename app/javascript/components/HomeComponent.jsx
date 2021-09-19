@@ -1,35 +1,46 @@
 import React, {useEffect, useState} from 'react';
-import $ from "jquery";
-import {ReviewListComponent, ReviewListJQueryComponent} from "./ReviewListComponent";
-import {NewReviewModalComponent} from "./NewReviewModalComponent";
+import $ from 'jquery';
+import {ReviewListComponent} from './ReviewListComponent';
+import {NewReviewModalComponent} from './NewReviewModalComponent';
+import {Toast} from './Toast';
 
 export const HomeComponent = () => {
     const [showModal, setShowModal] = useState(false);
-    const [renderReviewListCallback, setRenderReviewListCallback] = useState(() => () => {
-        alert('was called before should!'); // this code will be removed when ReviewListJQueryComponent is refactored
-    })
+    const [reviews, setReviews] = useState(null); // [{ rating: 1, review: ''}]
+
+    const loadReviews = () => {
+        const fetchReviews = () => {
+            return $.ajax({url: '/reviews', dataType: 'json'})
+                .catch(errorResponse => {
+                    Toast.displayError(
+                        'Oops! Found an error while attempting to fetch the reviews! Please reload the page in a few moments to try again!',
+                        errorResponse
+                    );
+                    return [];
+                });
+        };
+        fetchReviews().then(rs => setReviews(rs));
+    };
+
+    useEffect(() => {
+        loadReviews();
+    }, [])
 
     const handleNewReviewSaved = () => {
-        renderReviewListCallback();
+        loadReviews();
         setTimeout(() => {
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); // scroll to bottom of page
         }, 300);
     };
-
-    useEffect(() => {
-        const { renderReviewList } = ReviewListJQueryComponent($('#review-list'), $('#average-rating'), $('#average-rating-stars'));
-        setRenderReviewListCallback(() => renderReviewList);
-
-        $('#add-review-btn').click(() => {
-            setShowModal(true);
-        });
-    }, [])
+    const handleAddReviewRequested = () => {
+        setShowModal(true);
+    }
 
     return (
         <div className="content">
             <h1 id="main-header">The Minimalist Entrepreneur</h1>
 
-            <ReviewListComponent/>
+            <ReviewListComponent reviews={reviews} onAddReviewRequested={handleAddReviewRequested} />
 
             <NewReviewModalComponent
                 showModal={showModal}
