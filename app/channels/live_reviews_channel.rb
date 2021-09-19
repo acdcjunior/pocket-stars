@@ -1,6 +1,8 @@
 class LiveReviewsChannel < ApplicationCable::Channel
   def subscribed
-    # stream_from "some_channel"
+    stream_from 'live_reviews'
+    # as the users connect, send them all reviews
+    transmit({ reviews: Review.all })
   end
 
   def unsubscribed
