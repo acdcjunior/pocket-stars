@@ -29,7 +29,7 @@ export const HomeComponent = () => {
     const handleNewReviewSaved = () => {
         loadReviews();
         setTimeout(() => {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); // scroll to bottom of page
+            window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'}); // scroll to bottom of page
         }, 300);
     };
     const handleAddReviewRequested = () => {
@@ -40,7 +40,7 @@ export const HomeComponent = () => {
         <div className="content">
             <h1 id="main-header">The Minimalist Entrepreneur</h1>
 
-            <ReviewListComponent reviews={reviews} onAddReviewRequested={handleAddReviewRequested} />
+            <ReviewListComponent reviews={reviews} onAddReviewRequested={handleAddReviewRequested}/>
 
             <NewReviewModalComponent
                 showModal={showModal}

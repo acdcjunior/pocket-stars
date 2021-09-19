@@ -1,8 +1,6 @@
 import React from 'react';
-import {StarComponent} from "./StarComponent";
-import {getAverageRating, STARS} from "../app/reviewsModel";
-
-
+import {StarComponent} from './StarComponent';
+import {getAverageRating, STARS} from '../app/reviewsModel';
 
 
 export const ReviewListComponent = ({ reviews, onAddReviewRequested }) => {
@@ -31,26 +29,22 @@ export const ReviewListComponent = ({ reviews, onAddReviewRequested }) => {
             <ul id="review-list">
                 {
                     reviews === null
-                        ?
-                        <li>
+                        ? <li>
                             <div className="notice">Loading reviews...</div>
                         </li>
-                        :
-                        (
+                        : (
                             reviews.length === 0
-                                ?
-                                <li>
+                                ? <li>
                                     <div className="notice">There are no reviews yet! You could be first!</div>
                                 </li>
-                                :
-                                reviews.map((r, i) => (
+                                : reviews.map((r, i) => (
                                         <li className='review' key={i}>
                                             <div>
                                                 {STARS.map(({rating: ratingForThisStar}, starKey) => (
-                                                    <StarComponent on={r.rating >= ratingForThisStar} key={starKey} />
+                                                    <StarComponent on={r.rating >= ratingForThisStar} key={starKey}/>
                                                 ))}
                                                 <span className='review-rating'>{r.rating}</span>
-                                                <span className='review-text' title={r.review}>, { r.review }</span>
+                                                <span className='review-text' title={r.review}>, {r.review}</span>
                                             </div>
                                         </li>
                                     )

@@ -19,7 +19,7 @@ const SHAKE_EFFECT_CLASSNAME = 'shake';
  * - mouseleave resets the highlighted stars to selected rating
  * - click updates the selected rating
  */
-const SelectRatingComponent = ({ selectedRating, onSelectRating, flashInvalid }) => {
+const SelectRatingComponent = ({selectedRating, onSelectRating, flashInvalid}) => {
     const [highlightedRating, setHighlightedRating] = useState(selectedRating)
 
     useEffect(() => {
@@ -45,7 +45,7 @@ const SelectRatingComponent = ({ selectedRating, onSelectRating, flashInvalid })
                     key={rating}
                     tabIndex="0"
                     role="button"
-                    aria-pressed={ selectedRating >= rating }
+                    aria-pressed={selectedRating >= rating}
                     aria-label={`Rate as ${name} star`}
                     onMouseEnter={() => setHighlightedRating(rating)}
                     onMouseLeave={resetHighlightedStars}
@@ -65,7 +65,7 @@ const SelectRatingComponent = ({ selectedRating, onSelectRating, flashInvalid })
  * - parent can flashInvalid, which will shake it and bring focus to the textarea
  * - parent can focus the textarea, which will select the whole typed text if there is any
  */
-const ReviewTextAreaComponent = ({ show, typedReview, onChangeTypedReview, flashInvalid }) => {
+const ReviewTextAreaComponent = ({show, typedReview, onChangeTypedReview, flashInvalid}) => {
     const textareaEl = useRef(null);
 
     useEffect(() => {
@@ -112,7 +112,7 @@ const ReviewTextAreaComponent = ({ show, typedReview, onChangeTypedReview, flash
  * - parent can listen for submit button clicks
  * - div overlay that blocks any click is shown while the submit click is being handled (to prevent bad stuff like re-submits)
  */
-const SubmitNewReviewButtonComponent = ({ onSubmitNewReview }) => {
+const SubmitNewReviewButtonComponent = ({onSubmitNewReview}) => {
     const [submitting, setSubmitting] = useState(false);
 
     const handleSubmitNewReview = async () => {
@@ -140,15 +140,19 @@ const SubmitNewReviewButtonComponent = ({ onSubmitNewReview }) => {
  * - click outside modal hides it (or rather request that the parent hides it)
  * - escape key hides the modal
  */
-export const NewReviewModalComponent = ({ showModal, onHideModalRequested, onNewReviewSaved }) => {
+export const NewReviewModalComponent = ({showModal, onHideModalRequested, onNewReviewSaved}) => {
     const [selectedRating, setSelectedRating] = useState(0);
     const [flashInvalidRating, setFlashInvalidRating] = useState(false);
     const [typedReview, setTypedReview] = useState('');
     const [flashInvalidTypedReview, setFlashInvalidTypedReview] = useState(false);
 
     const hideModal = () => onHideModalRequested();
-    const resetSelectedRating = () => { setSelectedRating(0); };
-    const resetTypedReview = () => { setTypedReview(''); };
+    const resetSelectedRating = () => {
+        setSelectedRating(0);
+    };
+    const resetTypedReview = () => {
+        setTypedReview('');
+    };
 
     useEffect(() => {
         $(window).on('mousedown.clickOutsideClosesModal', (e) => {
@@ -223,11 +227,11 @@ export const NewReviewModalComponent = ({ showModal, onHideModalRequested, onNew
                 <h1 id="new-review-header">What’s your rating?</h1>
 
                 <h3 id="new-review-rating-header">Rating</h3>
-                <SelectRatingComponent selectedRating={selectedRating} onSelectRating={setSelectedRating} flashInvalid={flashInvalidRating} />
+                <SelectRatingComponent selectedRating={selectedRating} onSelectRating={setSelectedRating} flashInvalid={flashInvalidRating}/>
 
-                <ReviewTextAreaComponent show={showModal} typedReview={typedReview} onChangeTypedReview={setTypedReview} flashInvalid={flashInvalidTypedReview} />
+                <ReviewTextAreaComponent show={showModal} typedReview={typedReview} onChangeTypedReview={setTypedReview} flashInvalid={flashInvalidTypedReview}/>
 
-                <SubmitNewReviewButtonComponent onSubmitNewReview={handleSubmitNewReview} />
+                <SubmitNewReviewButtonComponent onSubmitNewReview={handleSubmitNewReview}/>
             </div>
         </div>
     );
