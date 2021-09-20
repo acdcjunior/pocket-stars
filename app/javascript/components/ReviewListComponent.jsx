@@ -24,7 +24,7 @@ const ReviewComponent = ({reviewModel}) => {
 
 export const ReviewListComponent = ({reviews, onAddReviewRequested}) => {
     const averageRating = getAverageRating(reviews);
-    const averageRatingStars = +averageRating;
+    const averageRatingStars = Math.round(+averageRating * 2)/2;
 
     return (
         <div>
