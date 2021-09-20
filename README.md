@@ -1,8 +1,10 @@
 # pocket-stars
 
-A very simple review+rating app powered by Rails and jQuery.
+A very simple realtime review+rating app powered by Rails and React/jQuery.
 
-Demo: https://pocket-stars-mvp.herokuapp.com/
+Demo:
+- https://pocket-stars-mvp.herokuapp.com/ (MVP, jQuery)
+- https://pocket-stars-v2.herokuapp.com/ (realtime, half-star support, React)
 
 See the [ADRs folder](_doc/adr) for important architectural notes.
 
