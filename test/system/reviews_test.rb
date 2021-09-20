@@ -2,7 +2,7 @@
 
 require 'application_system_test_case'
 
-class HomeTest < ApplicationSystemTestCase
+class ReviewsTest < ApplicationSystemTestCase
   add_review_button_label = 'Add review'
   star_selector = '.star'
   highlighted_star_selector = '.star.star-on'
@@ -15,11 +15,15 @@ class HomeTest < ApplicationSystemTestCase
   new_review_textarea_selector = '#new-review-review-textarea'
   submit_review_button_label = 'Submit review'
 
-  test 'visiting home' do
-    visit root_url
+  setup do
+    @product = products(:one)
+  end
 
-    page.assert_title 'The Minimalist Entrepreneur | Ratings'
-    assert_selector 'h1', text: 'The Minimalist Entrepreneur'
+  test 'visiting product reviews' do
+    visit_product_one_reviews
+
+    page.assert_title "#{@product.name} | Reviews"
+    assert_selector 'h1', text: @product.name
 
     reviews.each do |r|
       assert_text r.rating
@@ -28,7 +32,7 @@ class HomeTest < ApplicationSystemTestCase
   end
 
   test "'add review' modal is absent on page init and appears on click" do
-    visit root_url
+    visit_product_one_reviews
 
     assert_no_text whats_your_rating_header_text
     click_on add_review_button_label
@@ -37,7 +41,7 @@ class HomeTest < ApplicationSystemTestCase
 
   test "'add review' opens modal and creates new review" do
     # given
-    visit root_url
+    visit_product_one_reviews
     # when
     click_on add_review_button_label
     new_review_text = "Review text! #{random_string}"
@@ -53,7 +57,7 @@ class HomeTest < ApplicationSystemTestCase
 
   test "'add review' form is cleared after creation" do
     # given
-    visit root_url
+    visit_product_one_reviews
     click_on add_review_button_label
     find(new_review_textarea_selector).send_keys random_string
     click_on one_star_label
@@ -68,7 +72,7 @@ class HomeTest < ApplicationSystemTestCase
 
   test 'invalid review does not insert a new review' do
     # given
-    visit root_url
+    visit_product_one_reviews
     number_of_reviews_when_page_was_loaded = page.all(review_on_review_list_selector).count
 
     click_on add_review_button_label
@@ -80,12 +84,18 @@ class HomeTest < ApplicationSystemTestCase
 
   test 'escape closes modal' do
     # given
-    visit root_url
+    visit_product_one_reviews
 
     click_on add_review_button_label
     assert_text whats_your_rating_header_text
 
     find(new_review_textarea_selector).send_keys(:escape)
     assert_no_text whats_your_rating_header_text
+  end
+
+  private
+
+  def visit_product_one_reviews
+    visit "#{root_url}/#{@product.slug}"
   end
 end
