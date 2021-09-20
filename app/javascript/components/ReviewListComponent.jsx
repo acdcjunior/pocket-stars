@@ -3,7 +3,26 @@ import {StarComponent} from './StarComponent';
 import {FULL_STARS, getAverageRating, getReviewModelRatingAsDecimal} from '../app/reviewsModel';
 
 
-export const ReviewListComponent = ({ reviews, onAddReviewRequested }) => {
+const ReviewComponent = ({reviewModel}) => {
+    const getStarType = (ratingForThisStar) => reviewModel.rating >= ratingForThisStar
+        ? 'FULL'
+        : ((reviewModel.rating === (ratingForThisStar - 1) && reviewModel.half_star)
+                ? 'HALF'
+                : 'EMPTY'
+        );
+
+    return (
+        <div>
+            {FULL_STARS.map(({asModel: {rating: ratingForThisStar}}, starKey) => (
+                <StarComponent key={starKey} starType={getStarType(ratingForThisStar)}/>
+            ))}
+            <span className='review-rating'>{getReviewModelRatingAsDecimal(reviewModel)}</span>
+            <span className='review-text' title={reviewModel.review}>, {reviewModel.review}</span>
+        </div>
+    );
+};
+
+export const ReviewListComponent = ({reviews, onAddReviewRequested}) => {
     const averageRating = getAverageRating(reviews);
     const averageRatingStars = +averageRating;
 
@@ -34,31 +53,8 @@ export const ReviewListComponent = ({ reviews, onAddReviewRequested }) => {
                         </li>
                         : (
                             reviews.length === 0
-                                ? <li>
-                                    <div className="notice">There are no reviews yet! You could be first!</div>
-                                </li>
-                                : reviews.map((r, i) => (
-                                        <li className='review' key={i}>
-                                            <div>
-                                                {FULL_STARS.map(({ asModel: { rating: ratingForThisStar }}, starKey) => (
-                                                    <StarComponent
-                                                        key={starKey}
-                                                        starType={
-                                                            r.rating >= ratingForThisStar
-                                                                ? 'FULL'
-                                                                : ((r.rating === (ratingForThisStar - 1) && r.half_star)
-                                                                        ? 'HALF'
-                                                                        : 'EMPTY'
-                                                                )
-                                                        }
-                                                    />
-                                                ))}
-                                                <span className='review-rating'>{getReviewModelRatingAsDecimal(r)}</span>
-                                                <span className='review-text' title={r.review}>, {r.review}</span>
-                                            </div>
-                                        </li>
-                                    )
-                                )
+                                ? <li><div className="notice">There are no reviews yet! You could be first!</div></li>
+                                : reviews.map((rModel, i) => (<li className='review' key={i}><ReviewComponent reviewModel={rModel} /></li>))
                         )
                 }
             </ul>
