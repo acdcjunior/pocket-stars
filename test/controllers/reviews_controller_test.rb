@@ -7,8 +7,14 @@ class ReviewsControllerTest < ActionDispatch::IntegrationTest
     @review = reviews(:r1)
   end
 
-  test 'should get index' do
-    get reviews_url
+  test 'should get reviews as html' do
+    get reviews_url, as: :html
+    assert_response :success
+    assert_select 'title', 'The Minimalist Entrepreneur | Ratings'
+  end
+
+  test 'should get reviews as json' do
+    get reviews_url, as: :json
     assert_response :success
 
     obtained_reviews = @response.parsed_body

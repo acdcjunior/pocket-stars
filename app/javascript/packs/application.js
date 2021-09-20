@@ -1,6 +1,6 @@
 import Rails from "@rails/ujs"
 import "channels"
 
-import "../home"
+import "../reviews"
 
 Rails.start()
