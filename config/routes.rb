@@ -7,5 +7,5 @@ Rails.application.routes.draw do
   root 'products#index'
 
   # route /product-slug
-  match '*path', to: 'home#index', via: :get
+  match '*path', to: 'reviews#index', via: :get
 end

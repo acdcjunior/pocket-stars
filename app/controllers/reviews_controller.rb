@@ -3,7 +3,10 @@
 class ReviewsController < ApplicationController
   # GET /reviews - lists all reviews
   def index
-    render json: Review.all
+    respond_to do |format|
+      format.html { render :index }
+      format.json { render json: Review.all }
+    end
   end
 
   # POST /reviews - creates new reviews
