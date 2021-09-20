@@ -11,6 +11,7 @@ class ReviewsController < ApplicationController
     @review = Review.new(review_params)
 
     if @review.save
+      ActionCable.server.broadcast('live_reviews', { reviews: [@review] })
       render json: true, status: :created # jQuery requires content for 201 status; returning true as dummy
     else
       render json: @review.errors, status: :unprocessable_entity
