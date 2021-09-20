@@ -70,12 +70,12 @@ function ReviewListComponent($reviewList, $averageRatingNumber, $averageRatingSt
         }
     };
     function highlightAverageRatingStars(averageRating) {
-        const avgRatingCeil = Math.ceil(+averageRating);
+        const avgRatingRound = Math.round(+averageRating);
         $averageRatingStars
             .children('span').empty().end()
-            .children('span.defs').append([avgRatingCeil !== 0 ? $starOnWithDefs.clone() : $starOffWithDefs.clone()]).end()
+            .children('span.defs').append([avgRatingRound !== 0 ? $starOnWithDefs.clone() : $starOffWithDefs.clone()]).end()
             .children('span:not(.defs)').append([$starOn.clone(), $starOff.clone()]).end()
-            .children().removeClass('star-on').slice(0, avgRatingCeil).addClass('star-on');
+            .children().removeClass('star-on').slice(0, avgRatingRound).addClass('star-on');
     }
 
     const renderReviewList = async () => {
