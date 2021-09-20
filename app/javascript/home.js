@@ -129,13 +129,20 @@ function NewReviewModalComponent(
         const initView = () => {
             $reviewStarsRoot.children('span').append([$starOn.clone(), $starOff.clone()]);
         }
+        const keysThatShouldToggleStars = [' ', 'Enter'];
         const bindEventsOnView = () => {
             $stars.each((i, e) => {
                 const ratingForThisStar = i + 1;
                 $(e).on({
                     mouseenter: () => highlightStarsUpTo(ratingForThisStar),
                     mouseleave: resetHighlightedStars,
-                    click: () => selectNewRating(ratingForThisStar)
+                    click: () => selectNewRating(ratingForThisStar),
+                    keyup: (e) => {
+                        if (keysThatShouldToggleStars.includes(e.key)) {
+                            selectNewRating(ratingForThisStar);
+                            highlightStarsUpTo(ratingForThisStar);
+                        }
+                    }
                 });
             });
         }
