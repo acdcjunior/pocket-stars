@@ -1,33 +1,47 @@
-import React, {useEffect, useState} from 'react';
-import $ from 'jquery';
+import React, {useEffect, useReducer, useState} from 'react';
 import {ReviewListComponent} from './ReviewListComponent';
 import {NewReviewModalComponent} from './NewReviewModalComponent';
 import {Toast} from './Toast';
+import {liveReviewsConsumer} from "../channels/live_reviews_channel";
+
+
+function reviewsReducer(state, {payload: {reviews: newReviews}}) {
+    const currentReviews = state ?? [];
+    const newReviewsIds = newReviews.map(r => r.id);
+    const currentReviewsMinusOverriddenNewReviews = currentReviews.filter(r => !newReviewsIds.includes(r.id));
+    return [...currentReviewsMinusOverriddenNewReviews, ...newReviews];
+}
+
+function webSocketConnectedReducer(state, action) {
+    return action.type === 'connected';
+}
 
 export const HomeComponent = () => {
     const [showModal, setShowModal] = useState(false);
-    const [reviews, setReviews] = useState(null); // [{ rating: 1, review: ''}]
-
-    const loadReviews = () => {
-        const fetchReviews = () => {
-            return $.ajax({url: '/reviews', dataType: 'json'})
-                .catch(errorResponse => {
-                    Toast.displayError(
-                        'Oops! Found an error while attempting to fetch the reviews! Please reload the page in a few moments to try again!',
-                        errorResponse
-                    );
-                    return [];
-                });
-        };
-        fetchReviews().then(rs => setReviews(rs));
-    };
+    const [reviews, dispatchReviews] = useReducer(reviewsReducer, null);
+    const [webSocketConnected, dispatchWebSocketConnected] = useReducer(webSocketConnectedReducer, null);
 
     useEffect(() => {
-        loadReviews();
+        // loadReviews();
+        liveReviewsConsumer({
+            onConnected: () => dispatchWebSocketConnected({type: 'connected'}),
+            onDisconnected: () => dispatchWebSocketConnected({type: 'disconnected'}),
+            onDataReceived: (data) => dispatchReviews({payload: data}),
+        })
     }, [])
 
+    useEffect(() => {
+        if (webSocketConnected === null) {
+            return;
+        }
+        if (webSocketConnected) {
+            Toast.displayInfo('You are now online.', 3000);
+        } else {
+            Toast.displayInfo('You are offline.<br>We will attempt to reconnect shortly.', 5000);
+        }
+    }, [webSocketConnected])
+
     const handleNewReviewSaved = () => {
-        loadReviews();
         setTimeout(() => {
             window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'}); // scroll to bottom of page
         }, 300);

@@ -1,15 +1,17 @@
 import consumer from "./consumer"
 
-consumer.subscriptions.create("LiveReviewsChannel", {
-  connected() {
-    // Called when the subscription is ready for use on the server
-  },
+export const liveReviewsConsumer = ({onConnected, onDisconnected, onDataReceived}) => {
+    consumer.subscriptions.create("LiveReviewsChannel", {
+        connected() {
+            onConnected();
+        },
 
-  disconnected() {
-    // Called when the subscription has been terminated by the server
-  },
+        disconnected() {
+            onDisconnected();
+        },
 
-  received(data) {
-    // Called when there's incoming data on the websocket for this channel
-  }
-});
+        received(data) {
+            onDataReceived(data);
+        }
+    });
+}
