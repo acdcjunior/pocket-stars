@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import $ from "jquery";
 import {Toast} from "./Toast";
 import {StarComponent} from "./StarComponent";
-import {STARS, ZERO_STARS, ZERO_STARTS_VALUE, createNewReview} from "../app/reviewsModel";
+import {STARS, ZERO_STARS, ZERO_STARTS_VALUE, createNewReview, postNewReview} from "../app/reviewsModel";
 
 const SHAKE_EFFECT_CLASSNAME = 'shake';
 
@@ -87,6 +87,9 @@ const SelectRatingComponent = ({selectedRating, onSelectRating, flashInvalid}) =
  * - parent can reset typed review, which will just empty the typed text
  * - parent can flashInvalid, which will shake it and bring focus to the textarea
  * - parent can focus the textarea, which will select the whole typed text if there is any
+ *
+ * NOTE: We use contenteditable instead of a plain textarea because we wanted it to expand as we typed, and
+ * not mess the display like changing the modal's height
  */
 const ReviewTextAreaComponent = ({show, typedReview, onChangeTypedReview, flashInvalid}) => {
     const textareaEl = useRef(null);
@@ -206,16 +209,6 @@ export const NewReviewModalComponent = ({showModal, onHideModalRequested, onNewR
 
 
     const handleSubmitNewReview = () => {
-        const postNewReview = review => $.ajax({
-            type: 'POST',
-            url: '/reviews',
-            dataType: 'json',
-            data: {
-                review,
-                authenticity_token: $('[name="csrf-token"]').attr('content')
-            }
-        });
-
         const validationResult = createNewReview({ selectedRating, typedReview });
         if (validationResult.thereAreInvalidParameters) {
             if (validationResult.isSelectedRatingInvalid) {

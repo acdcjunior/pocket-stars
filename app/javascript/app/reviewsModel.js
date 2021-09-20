@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 export const ZERO_STARTS_VALUE = 'ZERO';
 export const STARS = [
     { order: 0, rating: ZERO_STARTS_VALUE,  name: 'zero stars',             asModel: { rating: 0, half_star: 0 }, equalToOrGreaterThan, equalToOrLessThan },
@@ -22,6 +24,16 @@ function equalToOrGreaterThan(rating) {
 function equalToOrLessThan(rating) {
     return this.order <= STARS_AS_MAP[rating].order;
 }
+
+export const postNewReview = review => $.ajax({
+    type: 'POST',
+    url: '/reviews',
+    dataType: 'json',
+    data: {
+        review,
+        authenticity_token: $('[name="csrf-token"]').attr('content')
+    }
+});
 
 export const createNewReview = ({ selectedRating, typedReview }) => {
     const selectedRatingAsStar = STARS_AS_MAP[selectedRating];
