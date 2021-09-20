@@ -5,18 +5,18 @@ import {FULL_STARS, getAverageRating, getReviewModelRatingAsDecimal} from '../ap
 
 export const ReviewListComponent = ({ reviews, onAddReviewRequested }) => {
     const averageRating = getAverageRating(reviews);
-    const averageRatingStars = Math.ceil(+averageRating);
+    const averageRatingStars = +averageRating;
 
     return (
         <div>
             <div id="average-rating-box">
-                <span id="average-rating">{ averageRating }</span>
-                <div id="average-rating-stars">
-                    <StarComponent on={averageRatingStars >= 1} includeSvgDefs={true} />
-                    <StarComponent on={averageRatingStars >= 2} />
-                    <StarComponent on={averageRatingStars >= 3} />
-                    <StarComponent on={averageRatingStars >= 4} />
-                    <StarComponent on={averageRatingStars >= 5} />
+                <span id="average-rating" style={{visibility: reviews === null ? 'hidden' : null}}>{ averageRating }</span>
+                <div id="average-rating-stars" style={{visibility: reviews === null ? 'hidden' : null}}>
+                    <StarComponent starType={averageRatingStars >= 1 ? 'FULL' : (averageRatingStars >= 0.5 ? 'HALF' : 'EMPTY')} includeSvgDefs={true}/>
+                    <StarComponent starType={averageRatingStars >= 2 ? 'FULL' : (averageRatingStars >= 1.5 ? 'HALF' : 'EMPTY')} />
+                    <StarComponent starType={averageRatingStars >= 3 ? 'FULL' : (averageRatingStars >= 2.5 ? 'HALF' : 'EMPTY')} />
+                    <StarComponent starType={averageRatingStars >= 4 ? 'FULL' : (averageRatingStars >= 3.5 ? 'HALF' : 'EMPTY')} />
+                    <StarComponent starType={averageRatingStars >= 5 ? 'FULL' : (averageRatingStars >= 4.5 ? 'HALF' : 'EMPTY')} />
                 </div>
 
                 <button id="add-review-btn" onClick={onAddReviewRequested}>Add review</button>
