@@ -4,7 +4,12 @@ class ReviewsController < ApplicationController
   # GET /reviews - lists all reviews
   def index
     respond_to do |format|
-      format.html { render :index }
+      format.html do
+        @product = Product.where(slug: params[:path])[0]
+        raise ActionController::RoutingError, 'Not Found' if @product.nil?
+
+        render :index
+      end
       format.json { render json: Review.all }
     end
   end

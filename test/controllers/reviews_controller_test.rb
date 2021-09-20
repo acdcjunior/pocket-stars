@@ -6,13 +6,14 @@ class ReviewsControllerTest < ActionDispatch::IntegrationTest
   include ActionCable::Channel::TestCase::Behavior
 
   setup do
+    @product = products(:one)
     @review = reviews(:r1)
   end
 
   test 'should get reviews as html' do
-    get reviews_url, as: :html
+    get "#{root_path}/#{@product.slug}", as: :html
     assert_response :success
-    assert_select 'title', 'The Minimalist Entrepreneur | Ratings'
+    assert_select 'title', "#{@product.name} | Reviews"
   end
 
   test 'should get reviews as json' do
