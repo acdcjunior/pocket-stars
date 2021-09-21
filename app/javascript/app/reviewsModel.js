@@ -25,9 +25,9 @@ function equalToOrLessThan(rating) {
     return this.order <= STARS_AS_MAP[rating].order;
 }
 
-export const postNewReview = review => $.ajax({
+export const postNewReview = (productSlug, review) => $.ajax({
     type: 'POST',
-    url: '/reviews',
+    url: '/' + productSlug,
     dataType: 'json',
     data: {
         review,

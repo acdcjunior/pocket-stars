@@ -24,6 +24,7 @@ export const HomeComponent = () => {
     useEffect(() => {
         // loadReviews();
         liveReviewsConsumer({
+            project: 'the-minimalist-entrepreneur',
             onConnected: () => dispatchWebSocketConnected({type: 'connected'}),
             onDisconnected: () => dispatchWebSocketConnected({type: 'disconnected'}),
             onDataReceived: (data) => dispatchReviews({payload: data}),

@@ -1,6 +1,7 @@
+import 'channels';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {HomeComponent} from "../components/HomeComponent";
+import {HomeComponent} from '../components/HomeComponent';
 
 document.addEventListener('DOMContentLoaded', () => {
     ReactDOM.render(

@@ -224,7 +224,7 @@ export const NewReviewModalComponent = ({showModal, onHideModalRequested, onNewR
             return;
         }
 
-        return postNewReview(validationResult.reviewAsModel)
+        return postNewReview('the-minimalist-entrepreneur', validationResult.reviewAsModel)
             .done(() => {
                 Toast.displaySuccess('Your new review has been submitted! Thanks!');
 
