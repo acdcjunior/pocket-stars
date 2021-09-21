@@ -26,8 +26,10 @@ class ReviewsTest < ApplicationSystemTestCase
     assert_selector 'h1', text: @product.name
 
     reviews.each do |r|
-      assert_text r.rating
-      assert_text r.review
+      if r.product_id == @product.id
+        assert_text r.rating
+        assert_text r.review
+      end
     end
   end
 

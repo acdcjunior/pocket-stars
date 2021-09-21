@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources :products, param: :slug
-  resources :reviews
-
   root 'products#index'
 
-  # route /product-slug
+  # /my-product-slug
   match '*path', to: 'reviews#index', via: :get
+  match '*path', to: 'reviews#create', via: :post
 end

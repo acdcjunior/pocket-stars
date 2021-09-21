@@ -1,34 +1,35 @@
 # frozen_string_literal: true
 
 class ReviewsController < ApplicationController
-  # GET /reviews - lists all reviews
+  before_action :set_product, only: %i[index create]
+
   def index
     respond_to do |format|
       format.html do
-        @product = Product.where(slug: params[:path])[0]
-        raise ActionController::RoutingError, 'Not Found' if @product.nil?
-
         render :index
       end
-      format.json { render json: Review.all }
+      format.json do
+        render json: Review.where(product_id: @product.id)
+      end
     end
   end
 
-  # POST /reviews - creates new reviews
   def create
-    @review = Review.new(review_params)
+    review = Review.new(review_params.to_h.merge({ 'product_id' => @product.id }))
 
-    if @review.save
+    if review.save
       render json: true, status: :created # jQuery requires content for 201 status; returning true as dummy
     else
-      render json: @review.errors, status: :unprocessable_entity
+      render json: review.errors, status: :unprocessable_entity
     end
   end
 
-  # TODO: actions below are kept temporarily for development purposes, they wont be in the MVP
-  # VIEW GET /reviews/new
-  def new
-    @review = Review.new
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_product
+    @product = Product.where(slug: params[:path])[0]
+    raise ActionController::RoutingError, 'Not Found' if @product.nil?
   end
 
   # Only allow a list of trusted parameters through.

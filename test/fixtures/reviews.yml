@@ -3,11 +3,19 @@
 r1:
   rating: 4
   review: book was full of fluff
+  product: one
 
 r2:
   rating: 3
   review: book was fluff
+  product: one
 
 r3:
   rating: 4
   review: book was amazing
+  product: one
+
+r4:
+  rating: 2
+  review: another book
+  product: two

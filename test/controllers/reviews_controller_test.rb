@@ -6,16 +6,18 @@ class ReviewsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @product = products(:one)
     @review = reviews(:r1)
+
+    @product_reviews_url = "#{root_path}/#{@product.slug}"
   end
 
   test 'should get reviews as html' do
-    get "#{root_path}/#{@product.slug}", as: :html
+    get @product_reviews_url, as: :html
     assert_response :success
     assert_select 'title', "#{@product.name} | Reviews"
   end
 
   test 'should get reviews as json' do
-    get reviews_url, as: :json
+    get @product_reviews_url, as: :json
     assert_response :success
 
     obtained_reviews = @response.parsed_body
@@ -24,9 +26,15 @@ class ReviewsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'book was amazing', obtained_reviews[2]['review']
   end
 
+  test 'should return NOT FOUND if project does not exist' do
+    assert_raises(ActionController::RoutingError) do
+      get "#{root_path}/some-project-slug-that-does-not-exist", as: :html
+    end
+  end
+
   test 'should create review' do
     assert_difference('Review.count') do
-      post reviews_url, as: :json, params: { review: { rating: @review.rating, review: @review.review } }
+      post @product_reviews_url, as: :json, params: { review: { rating: @review.rating, review: @review.review } }
     end
 
     assert_response 201
@@ -34,13 +42,13 @@ class ReviewsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should validate rating' do
-    post reviews_url, as: :json, params: { review: { rating: 0, review: 'hey' } }
+    post @product_reviews_url, as: :json, params: { review: { rating: 0, review: 'hey' } }
 
     assert_response 422
   end
 
   test 'should validate review (text prop)' do
-    post reviews_url, as: :json, params: { review: { rating: 1, review: '' } }
+    post @product_reviews_url, as: :json, params: { review: { rating: 1, review: '' } }
 
     assert_response 422
   end

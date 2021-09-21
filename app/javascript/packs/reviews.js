@@ -33,7 +33,7 @@ const Toast = {
 
 function ReviewListComponent($reviewList, $averageRatingNumber, $averageRatingStars) {
     const fetchReviews = () => {
-        return $.ajax({url: '/reviews', dataType: 'json'})
+        return $.ajax({url: `/${$(".content").data('product-slug')}`, dataType: 'json'})
             .catch(errorResponse => {
                 Toast.displayError(
                     'Oops! Found an error while attempting to fetch the reviews! Please reload the page in a few moments to try again!',
@@ -140,7 +140,7 @@ function NewReviewModalComponent(
                     keyup: (e) => {
                         if (keysThatShouldToggleStars.includes(e.key)) {
                             selectNewRating(ratingForThisStar);
-                            highlightStarsUpTo(ratingForThisStar);
+                            resetHighlightedStars();
                         }
                     }
                 });
@@ -230,9 +230,12 @@ function NewReviewModalComponent(
 
     const postNewReview = review => $.ajax({
         type: 'POST',
-        url: '/reviews',
+        url: `/${$(".content").data('product-slug')}`,
         dataType: 'json',
-        data: { review }
+        data:  {
+            review,
+            authenticity_token: $('[name="csrf-token"]').attr('content')
+        }
     });
 
     const validRatings = [1, 2, 3, 4, 5];
