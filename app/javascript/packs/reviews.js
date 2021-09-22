@@ -12,6 +12,8 @@ const $starOff = $(starOffSvg);
 
 const SHAKE_EFFECT_CLASSNAME = 'shake';
 
+const isNotMobileDevice = !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // https://stackoverflow.com/a/29509267/1850609
+
 function times(times, cb) {
     return Array.from({length: times}, cb)
 }
@@ -162,7 +164,9 @@ function NewReviewModalComponent(
         const flashInvalidAndBringFocus = () => {
             $reviewTextArea.parent().addClass(SHAKE_EFFECT_CLASSNAME);
             setTimeout(() => $reviewTextArea.parent().removeClass(SHAKE_EFFECT_CLASSNAME), 300);
-            $newReviewReviewTextArea.focus();
+            if (isNotMobileDevice) { // only focus if not mobile; the v. keyboard makes it clunky on those devices
+                $newReviewReviewTextArea.focus();
+            }
         }
         const resetTypedReview = () => {
             $reviewTextArea.text('')
@@ -183,11 +187,13 @@ function NewReviewModalComponent(
             resetTypedReview,
             flashInvalidAndBringFocus,
             focusTextArea: () => {
-                $reviewTextArea.focus();
-                if (getTypedReviewText() !== '') {
-                    // if text exists, then the modal has been shown and was closed without a submit...
-                    // ...so, select previously typed text to make it easier for the user to re-type
-                    window.getSelection().selectAllChildren($reviewTextArea[0]);
+                if (isNotMobileDevice) {
+                    $reviewTextArea.focus();
+                    if (getTypedReviewText() !== '') {
+                        // if text exists, then the modal has been shown and was closed without a submit...
+                        // ...so, select previously typed text to make it easier for the user to re-type
+                        window.getSelection().selectAllChildren($reviewTextArea[0]);
+                    }
                 }
             }
         };
