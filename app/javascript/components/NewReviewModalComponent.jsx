@@ -82,6 +82,8 @@ const SelectRatingComponent = ({selectedRating, onSelectRating, flashInvalid}) =
     )
 }
 
+const isNotMobileDevice = !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // https://stackoverflow.com/a/29509267/1850609
+
 /**
  * Relevant features:
  * - parent can get typed review
@@ -96,7 +98,7 @@ const ReviewTextAreaComponent = ({show, typedReview, onChangeTypedReview, flashI
     const textareaEl = useRef(null);
 
     useEffect(() => {
-        if (show) {
+        if (isNotMobileDevice && show) { // only focus if not mobile; the v. keyboard makes it clunky on those devices
             textareaEl.current.focus();
             if (typedReview !== '') {
                 // if text exists, then the modal has been shown and was closed without a submit...
@@ -107,7 +109,7 @@ const ReviewTextAreaComponent = ({show, typedReview, onChangeTypedReview, flashI
     }, [show]);
 
     useEffect(() => {
-        if (flashInvalid) {
+        if (flashInvalid && isNotMobileDevice) {
             textareaEl.current.focus();
         }
     }, [flashInvalid]);
