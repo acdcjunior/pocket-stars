@@ -113,7 +113,9 @@ button {
   }
 
   & .review-rating {
-    margin-left: 27px;
+    width: 29px;
+    margin-left: 18px;
+    text-align: right;
     margin-top: 11px;
     font-weight: bold;
     color: $base-text-color-black;
