@@ -1,35 +1,39 @@
-@import 'reviews'; // font and color definitions
+@import 'common';
 
-h1 {
-  font-family: $roboto-font-family;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 44px;
-  line-height: 52px;
+#products {
+  h1 {
+    font-family: $roboto-font-family;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 44px;
+    line-height: 52px;
 
-  color: $base-text-color-black;
+    color: $base-text-color-black;
 
-  text-align: center;
-  margin-top: 120px;
-}
-
-ul {
-  list-style-type: none;
-  padding-inline-start: 0;
-  text-align: center;
-
-  & li {
-    padding: 5px;
+    text-align: center;
+    margin-top: 120px;
   }
-}
 
-a {
-  font-size: 20px;
-  font-family: $roboto-font-family;
-  color: $base-text-color-gray;
+  ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+    text-align: center;
+    padding-top: 10px;
 
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
+    & li {
+      padding: 15px;
+    }
+  }
+
+  a {
+    font-size: 20px;
+    font-family: $roboto-font-family;
+    color: $base-text-color-gray;
+
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
