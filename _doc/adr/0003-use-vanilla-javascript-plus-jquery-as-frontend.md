@@ -4,7 +4,7 @@ Date: 2021-07-15
 
 ## Status
 
-Accepted
+Superseded by [0006](0006-use-react-as-frontend-lib.md).
 
 ## Context
 
