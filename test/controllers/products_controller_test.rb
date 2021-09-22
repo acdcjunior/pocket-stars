@@ -11,6 +11,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   test 'should get product list' do
     get root_url
     assert_response :success
+    assert_select 'title', 'Pocket Stars Reviews'
     assert_select 'h1', 'Products'
     assert_select "a[href$=#{@product.slug}]", @product.name
     assert_select "a[href$=#{@product_two.slug}]", @product_two.name

@@ -112,10 +112,10 @@ function NewReviewModalComponent(
             }
             $stars.attr('aria-pressed', 'false')
                 .slice(0, selectedRating).attr('aria-pressed', 'true')
+            resetHighlightedStars();
         }
         const resetSelectedRating = () => {
             selectNewRating(0);
-            resetHighlightedStars();
         };
         const highlightStarsUpTo = (rating) => {
             $stars.removeClass('star-on')
@@ -142,7 +142,6 @@ function NewReviewModalComponent(
                     keyup: (e) => {
                         if (keysThatShouldToggleStars.includes(e.key)) {
                             selectNewRating(ratingForThisStar);
-                            resetHighlightedStars();
                         }
                     }
                 });
