@@ -18,7 +18,7 @@ class ReviewsController < ApplicationController
     review = Review.new(review_params.to_h.merge({ 'product_id' => @product.id }))
 
     if review.save
-      ActionCable.server.broadcast('live_reviews', { reviews: [review] })
+      LiveReviewsChannel.broadcast_to(@product, { reviews: [review] })
       render json: true, status: :created # jQuery requires content for 201 status; returning true as dummy
     else
       render json: review.errors, status: :unprocessable_entity

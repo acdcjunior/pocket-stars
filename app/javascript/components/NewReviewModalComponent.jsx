@@ -1,8 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import $ from "jquery";
 import {Toast} from "./Toast";
 import {StarComponent} from "./StarComponent";
-import {STARS, ZERO_STARS, ZERO_STARTS_VALUE, createNewReview, postNewReview} from "../app/reviewsModel";
+import {createNewReview, postNewReview, STARS, ZERO_STARS, ZERO_STARTS_VALUE} from "../app/reviewsModel";
+import {ProductContext} from "./ProductContext";
 
 const SHAKE_EFFECT_CLASSNAME = 'shake';
 
@@ -170,6 +171,7 @@ const SubmitNewReviewButtonComponent = ({onSubmitNewReview}) => {
  * - escape key hides the modal
  */
 export const NewReviewModalComponent = ({showModal, onHideModalRequested, onNewReviewSaved}) => {
+    const product = useContext(ProductContext);
     const [selectedRating, setSelectedRating] = useState(ZERO_STARTS_VALUE);
     const [flashInvalidRating, setFlashInvalidRating] = useState(false);
     const [typedReview, setTypedReview] = useState('');
@@ -224,22 +226,17 @@ export const NewReviewModalComponent = ({showModal, onHideModalRequested, onNewR
             return;
         }
 
-        return postNewReview('the-minimalist-entrepreneur', validationResult.reviewAsModel)
-            .done(() => {
-                Toast.displaySuccess('Your new review has been submitted! Thanks!');
+        return postNewReview(product.productSlug, validationResult.reviewAsModel).done(() => {
+            Toast.displaySuccess('Your new review has been submitted! Thanks!');
 
-                resetSelectedRating();
-                resetTypedReview();
-                hideModal();
+            resetSelectedRating();
+            resetTypedReview();
+            hideModal();
 
-                onNewReviewSaved();
-            })
-            .fail((errorResponse) => {
-                Toast.displayError(
-                    'Oops! Found an error while attempting to save your new reviews! Please wait a few moments and try again!',
-                    errorResponse
-                );
-            });
+            onNewReviewSaved();
+        }).fail((errResp) => {
+            Toast.displayError('Oops! Found an error while attempting to save your review! Please wait a few moments and try again!', errResp);
+        });
     };
 
     return (

@@ -1,11 +1,14 @@
 import 'channels';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {HomeComponent} from '../components/HomeComponent';
+import {App} from "../components/App";
 
 document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('root');
     ReactDOM.render(
-        <HomeComponent/>,
-        document.getElementById('home-root')
+        <React.StrictMode>
+            <App {...root.dataset} />
+        </React.StrictMode>,
+        root
     );
 })

@@ -1,9 +1,9 @@
 class LiveReviewsChannel < ApplicationCable::Channel
   def subscribed
-    stream_from 'live_reviews'
+    product = Product.where(slug: params[:product])[0]
+    stream_for product
 
     # as the users connect, send them all reviews
-    product = Product.where(slug: params[:project])[0]
     transmit({ reviews: Review.where(product_id: product.id) })
   end
 

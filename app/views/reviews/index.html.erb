@@ -1,9 +1,11 @@
 <% provide(:pageTitle, "#{@product.name} | Reviews") %>
 
 <noscript>You need to enable JavaScript to run this app.</noscript>
-<div id="home-root"></div>
+<div
+  id="root"
+  data-product-slug="<%= @product.slug %>"
+  data-product-name="<%= @product.name %>"
+></div>
 
-<input type="hidden" id="product-slug" value="<%= @product.slug %>">
-<input type="hidden" id="product-name" value="<%= @product.name %>">
 
 <%= javascript_pack_tag 'reviews' %>

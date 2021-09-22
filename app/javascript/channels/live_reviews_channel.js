@@ -1,7 +1,7 @@
 import consumer from "./consumer"
 
-export const liveReviewsConsumer = ({project, onConnected, onDisconnected, onDataReceived}) => {
-    consumer.subscriptions.create({channel: "LiveReviewsChannel", project}, {
+export const liveReviewsConsumer = ({product, onConnected, onDisconnected, onDataReceived}) => {
+    consumer.subscriptions.create({channel: "LiveReviewsChannel", product}, {
         connected() {
             onConnected();
         },

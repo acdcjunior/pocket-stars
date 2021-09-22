@@ -1,8 +1,9 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useContext, useEffect, useReducer, useState} from 'react';
 import {ReviewListComponent} from './ReviewListComponent';
 import {NewReviewModalComponent} from './NewReviewModalComponent';
 import {Toast} from './Toast';
 import {liveReviewsConsumer} from "../channels/live_reviews_channel";
+import {ProductContext} from "./ProductContext";
 
 
 function reviewsReducer(state, {payload: {reviews: newReviews}}) {
@@ -16,7 +17,8 @@ function webSocketConnectedReducer(state, action) {
     return action.type === 'connected';
 }
 
-export const HomeComponent = () => {
+export const ReviewsComponent = () => {
+    const product = useContext(ProductContext);
     const [showModal, setShowModal] = useState(false);
     const [reviews, dispatchReviews] = useReducer(reviewsReducer, null);
     const [webSocketConnected, dispatchWebSocketConnected] = useReducer(webSocketConnectedReducer, null);
@@ -24,7 +26,7 @@ export const HomeComponent = () => {
     useEffect(() => {
         // loadReviews();
         liveReviewsConsumer({
-            project: 'the-minimalist-entrepreneur',
+            product: product.productSlug,
             onConnected: () => dispatchWebSocketConnected({type: 'connected'}),
             onDisconnected: () => dispatchWebSocketConnected({type: 'disconnected'}),
             onDataReceived: (data) => dispatchReviews({payload: data}),
@@ -53,7 +55,7 @@ export const HomeComponent = () => {
 
     return (
         <div className="content">
-            <h1 id="main-header">The Minimalist Entrepreneur</h1>
+            <h1 id="main-header">{product.productName}</h1>
 
             <ReviewListComponent reviews={reviews} onAddReviewRequested={handleAddReviewRequested}/>
 
