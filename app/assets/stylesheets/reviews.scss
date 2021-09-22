@@ -1,12 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import 'common';
 //noinspection CssUnknownTarget
 @import 'jquery-toast-plugin/src/jquery.toast';
-
-$base-text-color-black: #000000;
-$base-text-color-gray: #797874;
-$roboto-font: 'Roboto';
-$roboto-font-family: $roboto-font, sans-serif;
-$helvetica-neue-font-family: Helvetica Neue, Helvetica, serif;
 
 .content {
     width: 580px;
