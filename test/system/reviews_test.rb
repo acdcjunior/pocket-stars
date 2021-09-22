@@ -52,7 +52,7 @@ class ReviewsTest < ApplicationSystemTestCase
     click_on submit_review_button_label
     # then
     assert_text new_review_text
-    li_containing_new_review_text = find('span', text: new_review_text).find(:xpath, '..')
+    li_containing_new_review_text = find('span.review-text', text: new_review_text).find(:xpath, '..')
     expect(li_containing_new_review_text).to have_css(star_selector, count: 5)
     expect(li_containing_new_review_text).to have_css(highlighted_star_selector, count: 1)
   end
