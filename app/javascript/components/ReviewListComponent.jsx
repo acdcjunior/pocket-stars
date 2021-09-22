@@ -17,7 +17,15 @@ const ReviewComponent = ({reviewModel}) => {
                 <StarComponent key={starKey} starType={getStarType(ratingForThisStar)}/>
             ))}
             <span className='review-rating'>{getReviewModelRatingAsDecimal(reviewModel)}</span>
-            <span className='review-text' title={reviewModel.review}>, {reviewModel.review}</span>
+            <span className='review-text-comma'>, </span>
+            <span className='review-text-separator'> </span>
+            <span className='review-text'>
+                <span className="review-text-box" tabIndex={0} title='Click to read full review'>
+                    {/* two spans are necessary because when you show the clamped one in webkit@mobile the fonts enlarge (bug!) */}
+                    <span className='review-text-clamped'>{reviewModel.review}</span>
+                    <span className='review-text-full'>{reviewModel.review}</span>
+                </span>
+            </span>
         </div>
     );
 };

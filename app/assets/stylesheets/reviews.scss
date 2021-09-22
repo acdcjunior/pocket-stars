@@ -105,23 +105,76 @@ button {
     margin-top: 26px;
 
     & li > div {
-        display: flex;
-        align-items: center;
         margin: 0 0 14px 0;
     }
 
-    & .review-rating {
-        margin-left: 27px;
-        font-weight: bold;
-        color: $base-text-color-black;
-    }
+  & .review-rating {
+    margin-left: 27px;
+    margin-top: 11px;
+    font-weight: bold;
+    color: $base-text-color-black;
+    display: block;
+    float: left;
+  }
 
-    & .review-text {
-        white-space: nowrap;
+  & .review-text-comma, {
+    margin-top: 11px;
+    float: left;
+  }
+
+  & .review-text-comma, & .review-text-separator, & .review-text, {
+    display: block;
+    margin-top: 11px;
+  }
+
+  & .review-text:focus {
+    background-color: #fff8eb;
+    overflow: visible;
+    display: block;
+    max-height: none;
+  }
+
+  & .review-text {
+    margin-left: 2px;
+    max-width: 350px;
+    display: inline-block;
+    font-size: 20px;
+  }
+
+  & .review-text:hover {
+    background-color: #f0f0f0;
+  }
+
+  & .review-text-box {
+    word-break: break-word;
+
+    &:not(:focus) {
+      & .review-text-clamped {
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 355px;
+        display: -webkit-box;
+        //noinspection CssUnknownProperty
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+
+      & .review-text-full {
+        display: none;
+      }
     }
+
+    &:focus {
+      & .review-text-clamped {
+        display: none;
+      }
+
+      & .review-text-full {
+        display: block;
+        background-color: #fff9f0;
+        padding-bottom: 5px;
+      }
+    }
+  }
 }
 
 
@@ -133,6 +186,7 @@ button {
     display: inline-block;
     width: 30px;
     text-align: center;
+    float: left;
 
   & svg {
     transform: scale(2)
