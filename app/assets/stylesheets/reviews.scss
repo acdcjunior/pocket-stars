@@ -12,8 +12,6 @@
 }
 
 #main-header {
-    /* The Minimalist Entrepreneur */
-
     font-family: $roboto-font-family;
     font-style: normal;
     font-weight: bold;
@@ -50,13 +48,11 @@
 button {
     cursor: pointer;
 
-    /* Label 1 (Bold) */
     font-family: $helvetica-neue-font-family;
     font-style: normal;
     font-weight: bold;
     font-size: 17px;
     line-height: 21px;
-    /* identical to box height */
     text-align: center;
 
     color: #797874;
@@ -64,7 +60,6 @@ button {
     background: #FFFFFF;
     border: 1px solid #CCCCCC;
     box-sizing: border-box;
-    /* shadow-3 */
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     border-radius: 4px;
 }
@@ -74,12 +69,10 @@ button {
 }
 
 .divider {
-    /* design system style */
     width: 578px;
     height: 0;
     border-top: 1px solid #B9B9B9;
     border-bottom: none;
-    /* custom style */
     margin: 56px auto 46px;
 }
 
@@ -185,8 +178,6 @@ button {
 
 
 .star {
-    /* border: 1px solid black; */
-    /* background-color: #FAFAFA; */
     margin: 5px 0;
     padding: 7px 2px 4px 3px;
     display: inline-block;
@@ -243,7 +234,6 @@ div.jq-has-icon {
   }
 }
 #new-review-header {
-    /* What’s your rating? */
     font-family: $roboto-font-family;
     font-style: normal;
     font-weight: bold;
